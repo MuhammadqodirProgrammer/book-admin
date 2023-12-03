@@ -13,7 +13,7 @@ export default function Layout({ children }: any) {
   const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
 
   if (!token) {
-    // router.replace("/login");
+    router.replace("/login");
   } else {
     // router.replace("/");
   }
