@@ -4,10 +4,9 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import Layout from '@/layout/Layout';
 import { ThemeProvider } from 'next-themes';
-import { IoSettings } from 'react-icons/io5';
-import 'react-tooltip/dist/react-tooltip.css'
-import { Provider } from "react-redux";
-import storeTest from "../stores/store"
+import 'react-tooltip/dist/react-tooltip.css';
+import { Provider } from 'react-redux';
+import storeTest from '../stores/store';
 const inter = Inter({ subsets: ['latin'] });
 
 // export const metadata: Metadata = {
@@ -25,17 +24,9 @@ export default function RootLayout({
 			<body className={`${inter.className} dark:bg-[#1a202c] bg-[#eee]`}>
 				<ThemeProvider attribute='class'>
 					<Provider store={storeTest}>
-
-					<Layout>{children}</Layout>
+						<Layout>{children}</Layout>
 					</Provider>
-					<div className="postion_st">
-			<div className='flex justify-center bg-slate-800 cursor-pointer hover:bg-[#8958ea] items-center gap-x-2 py-[5px] px-[10px] -rotate-90  rounded-[8px] translate-y-[-50%] z-50 dark:bg-[#9F7AEA]  text-white'>
-					<IoSettings className='  animate-spin   ' size={25} />
-				<h3 className=' text-[#dbd6d6] font-bold  dark:text-white  uppercase '>customize</h3>
-			</div>
-
-</div>
-		
+					
 				</ThemeProvider>
 			</body>
 		</html>

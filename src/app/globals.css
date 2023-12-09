@@ -54,6 +54,25 @@
   background-color: #2D3748;
 }
 
+.postion_st {
+  position: fixed;
+  right: -100px !important;
+  top: 50%;
+  transform: translate(-50%, -50%) !important;
+}
+
+.inner_container_right_big {
+  max-width: calc(100% - 320px);
+  margin-left: 310px;
+
+}
+
+.inner_container_right_small {
+  max-width: calc(100% - 90px);
+  margin-left: 90px;
+
+}
+
 @media screen and (max-width:768px) {
   .inner_width {
     width: 100% !important;
@@ -67,11 +86,104 @@
     display: block;
 
   }
+
+  .postion_st {
+    position: fixed;
+    right: -100px !important;
+    top: 50%;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .inner_container_right_big {
+    max-width: 100%;
+    padding: 0 12px;
+    margin-left: 0;
+
+  }
+
+  .inner_container_right_small {
+    max-width: 100%;
+    margin-left: 0;
+    padding: 0 12px;
+
+
+  }
 }
 
-.postion_st{
-  position: fixed;
-  right: -100px !important;
-  top: 50%;
-  transform: translate(-50%, -50%) !important;
+/* switch btn css */
+.switch_btn{
+  position: relative;
+  display: inline-block;
+  width: 55px;
+  height: 28px;
+  cursor: pointer;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
 }
+.switch_btn::before{
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 3.2px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+.switch_btn_active::before{
+  transform: translateX(26px) !important;
+}
+.switch_btn_active{
+  background-color: #3af321 !important;
+}
+
+
+
+
+
+
+
+
+
+/* img toggle */
+
+
+ul {
+  list-style-type: none;
+}
+
+
+
+
+.img_label {
+
+  display: block;
+  position: relative;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.img_label_border_active{
+  border: 1px solid #9F7AEA !important;
+}
+
+
+.img_label img {
+  height: 140px;
+
+  width: 100%;
+  margin: 10px 0 ;
+  transition-duration: 0.2s;
+  transform-origin: 50% 50%;
+  border: 1px solid #2D3748 ;
+}
+
+
+
+

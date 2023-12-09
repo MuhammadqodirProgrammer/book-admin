@@ -4,11 +4,13 @@ import Navbar from './Navbar/Navbar';
 import FamousCourses from '@/components/FamousCourses/FamousCourses';
 import NewCourses from '@/components/NewCourses/NewCourses';
 import { useRouter } from 'next/navigation'; // Import from 'next/router' instead of 'next/navigation'
-
+import { useSelector, useDispatch } from 'react-redux';
 export default function Layout({ children }: any) {
 	const router = useRouter();
 
-	// Check if localStorage is available
+	const isOpenMenu = useSelector((state: any) => state.isOpenMenu);
+
+	let isOpen = /true/.test(isOpenMenu);
 	const token =
 		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
@@ -24,8 +26,14 @@ export default function Layout({ children }: any) {
 				<Header />
 			</div>
 			<Navbar />
-			<div className='inner_container mt-[12vh] min-h-[78vh] '>{children}</div>
 
+			<div
+				className={` mt-[12vh] min-h-[78vh] ${
+					isOpen ? 'inner_container_right_big' : 'inner_container_right_small'
+				}    `}
+			>
+				{children}
+			</div>
 		</>
 	);
 }

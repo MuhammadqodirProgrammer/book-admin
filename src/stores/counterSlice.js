@@ -1,14 +1,21 @@
+"use client"
 import { createSlice } from '@reduxjs/toolkit';
 
-// Counter reducer yaratish
+
+let test ;
+if (typeof window !== 'undefined') {
+  // Perform localStorage action
+  const item = localStorage.getItem('isOpen')
+  test =item
+}
+
 const counterSlice = createSlice({
-  name: 'counter',
-  initialState: 0,
+  name: 'isOpenMenu',
+  initialState:test  || true,
   reducers: {
-    increment: (state) => state + 1,
-    decrement: (state) => state - 1,
+    menuState:(state)=> !state,
   },
 });
 
-export const { increment, decrement } = counterSlice.actions;
+export const { menuState } = counterSlice.actions;
 export default counterSlice.reducer;

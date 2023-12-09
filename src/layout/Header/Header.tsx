@@ -17,18 +17,34 @@ import { AiFillStar } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
 import { FiMenu } from 'react-icons/fi';
 import { Tooltip } from 'react-tooltip';
-import { HiMenuAlt1 } from "react-icons/hi";
+// icons
+import { LuArrowLeftFromLine } from 'react-icons/lu';
+import { HiMenuAlt1 } from 'react-icons/hi';
+import { IoSettings } from 'react-icons/io5';
+import { IoColorPaletteSharp } from 'react-icons/io5';
+import { LuArrowRightFromLine } from 'react-icons/lu';
+import { PiArrowsHorizontalBold } from 'react-icons/pi';
 
 // redux
 import { useSelector, useDispatch } from 'react-redux';
-import { increment, decrement } from '../../stores/counterSlice';
-const Header = () => {
+import { menuState } from '../../stores/counterSlice';
 
-  const counter = useSelector((state:any) => state.counter);
-  const dispatch = useDispatch();
+// images
+
+import BarImg1 from '../../../public/images/card.png';
+import BarImg2 from '../../../public/images/default.png';
+import BarImg3 from '../../../public/images/inverted.png';
+import BarImg4 from '../../../public/images/vibrant.png';
+import { layoutState } from '@/stores/layoutSlice';
+const Header = () => {
+	const isOpenMenu: any = useSelector((state: any) => state.isOpenMenu);
+	const positionNav: any = useSelector((state: any) => state.positionNav);
+	const dispatch = useDispatch();
+
 	const pathname = usePathname();
 	const { setTheme } = useTheme();
 	const [isOffcanvasOpen, setOffcanvasOpen] = useState(false);
+	const [SettingsBar, setSettingsBar] = useState(false);
 	const [active, setActive] = useState(true);
 	const [display, setDisplay] = useState<string>();
 	const [theme, setThemeState] = useState('light');
@@ -39,8 +55,6 @@ const Header = () => {
 		setTheme(newTheme);
 		localStorage.setItem('theme', newTheme);
 	};
-
-  
 
 	useEffect(() => {
 		const storedTheme = localStorage.getItem('theme');
@@ -57,6 +71,18 @@ const Header = () => {
 	const fullScreen = {
 		width: '100%',
 	};
+	let isOpen = /true/.test(isOpenMenu);
+
+	useEffect(() => {
+		localStorage.setItem('isOpen', isOpenMenu);
+	}, [isOpen]);
+	useEffect(() => {
+		localStorage.setItem('positionNav', positionNav);
+	}, [positionNav]);
+	const toggleActiveBar = (e: any) => {
+		e.preventDefault();
+		console.log(e?.target?.classList?.toggle('img_label_border_active'));
+	};
 
 	return (
 		<>
@@ -66,30 +92,26 @@ const Header = () => {
 				>
 					<div className='flex  items-center gap-x-[30px] '>
 						<div
-							className='w-[40px] h-[40px] rounded-full transition-all hover:bg-slate-700 flex items-center justify-center '
+							className='w-[40px] h-[40px] rounded-full max-[768px]:hidden transition-all hover:bg-slate-700 flex items-center justify-center '
 							data-tooltip-id='my-tooltip'
 							data-tooltip-content='Toggle Navigation!'
 							data-tooltip-place='right'
+							onClick={() => dispatch(menuState())}
 						>
-              {true ? (	<FiMenu />) :<HiMenuAlt1 />}
-						
-            <Tooltip id='my-tooltip' />
+							{isOpen ? <FiMenu /> : <HiMenuAlt1 />}
 
+							<Tooltip id='my-tooltip' />
 						</div>
 
 						<Link
 							href='/'
 							className='flex items-center font-semibold gap-2 sm:text-[24px]  text-[16px]'
 						>
-							<Image src={Logo} width={32} height={32} alt='logo' />
+							<Image  src={Logo} width={32} height={32} alt='logo' />
 							Book
 						</Link>
 					</div>
-<div>
-<h1>Counter: {counter}</h1>
-      <button onClick={() => dispatch(increment())}>Increment</button>
-      <button onClick={() => dispatch(decrement())}>Decrement</button>
-</div>
+
 					<div className=' flex items-center md:gap-x-2  gap-x-3 '>
 						<div className='dropdown'>
 							<button className='dropbtn text-[14px] text-black dark:text-white'>
@@ -134,6 +156,10 @@ const Header = () => {
 								toggleTheme();
 								setActive(!active);
 							}}
+							data-tooltip-id='my-tooltip2'
+							data-tooltip-content='Switch theme!'
+							data-tooltip-place='bottom'
+							// {active ? data-tooltip-id='my-tooltip':data-tooltip-id='my-tooltip'}
 						>
 							<svg
 								className={active ? '' : 'hidden'}
@@ -172,6 +198,7 @@ const Header = () => {
 								<path d='M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z' />
 							</svg>
 						</button>
+						<Tooltip id='my-tooltip2' />
 						{/* mode  */}
 
 						<div className='sm:flex items-center ml-3  hidden  '>
@@ -251,10 +278,19 @@ const Header = () => {
 							</div>
 						</div>
 					</div>
-
 				</div>
+
 				<hr />
 			</header>
+
+			<div className='postion_st ' onClick={() => setSettingsBar(!SettingsBar)}>
+				<div className='flex justify-center bg-slate-800 cursor-pointer dark:hover:bg-[#8958ea] items-center gap-x-2 py-[5px] px-[10px] -rotate-90  rounded-[8px] translate-y-[-50%] z-50 dark:bg-[#9F7AEA]  text-white'>
+					<IoSettings className='  animate-spin   ' size={25} />
+					<h3 className=' text-[#dbd6d6] font-bold  dark:text-white  uppercase '>
+						customize
+					</h3>
+				</div>
+			</div>
 
 			{isOffcanvasOpen && (
 				<nav className='navbar_offcanvas fixed top-0 left-0  h-screen  '>
@@ -574,6 +610,170 @@ const Header = () => {
 									</div>
 								</button>
 							</Link>
+						</div>
+					</div>
+				</nav>
+			)}
+
+			{SettingsBar && (
+				<nav className='settings_offcanvas    h-screen  '>
+					<div className='h-[10vh] flex items-center  px-3 py-1 justify-between'>
+						<div>
+							<div className='flex items-center gap-x-3'>
+								<IoColorPaletteSharp size={22} />
+								<h3 className='font-bold text-[22px] '> Settins bar </h3>
+							</div>
+							<p className=' text-slate-200 '>Set your own customized style</p>
+						</div>
+
+						<button
+							onClick={() => setSettingsBar(!SettingsBar)}
+							type='button'
+							className='text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900   rounded-lg text-sm w-8 h-8  inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white'
+						>
+							<svg
+								className='w-3 h-3'
+								aria-hidden='true'
+								xmlns='http://www.w3.org/2000/svg'
+								fill='none'
+								viewBox='0 0 14 14'
+							>
+								<path
+									stroke='currentColor'
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									strokeWidth={2}
+									d='m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6'
+								/>
+							</svg>
+						</button>
+					</div>
+					<div className=' bg-slate-100  dark:bg-slate-900 min-h-screen p-3 '>
+						<div className=' text-black mt-0 dark:text-mainColor '>
+							<div className=' border-b-[1px]  mt-2 pb-2 border-cyan-100 flex items-center  justify-between'>
+								<div>
+									<div className='flex items-center gap-x-3'>
+										{true ? (
+											<LuArrowLeftFromLine size={22} />
+										) : (
+											<LuArrowRightFromLine size={22} />
+										)}
+
+										<h3 className='font-bold text-[20px]  '> RTL Mode </h3>
+									</div>
+									<p className=' text-slate-200  text-[13px]  '>
+										Switch your navbar direction
+									</p>
+								</div>
+								<button
+									onClick={() => dispatch(layoutState())}
+									className={`switch_btn ${
+										positionNav == 'right' ? 'switch_btn_active' : ''
+									} `}
+								></button>
+							</div>
+
+							<div className=' border-b-[1px]  mt-3 pb-2 border-cyan-100 flex items-center  justify-between'>
+								<div>
+									<div className='flex items-center gap-x-3'>
+										<PiArrowsHorizontalBold size={22} />
+
+										<h3 className='font-bold text-[20px]  '> Fluid Layout</h3>
+									</div>
+									<p className=' text-slate-200  text-[13px]  '>
+										Toggle container layout system
+									</p>
+								</div>
+
+								<button
+									onClick={() => dispatch(layoutState())}
+									className={`switch_btn ${
+										positionNav == 'right' ? 'switch_btn_active' : ''
+									} `}
+								></button>
+							</div>
+
+							<div className='   mt-3 pb-2  '>
+								<div className='flex items-center gap-x-3'>
+									<IoSettings size={22} />
+
+									<h3 className='font-bold text-[20px]  '>
+										{' '}
+										Vertical Navbar Style
+									</h3>
+								</div>
+								<p className=' text-slate-200  text-[13px]  '>
+									Switch between styles for your vertical navbar
+								</p>
+
+								<div className='flex'></div>
+								<div className='grid   gap-1 grid-cols-2  '>
+									<div>
+										<label htmlFor='cb1' className='img_label'>
+											<Image alt="img" onClick={toggleActiveBar} src={BarImg1} />
+										</label>
+										<div className='flex items-center gap-2'>
+											<span
+												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
+													true ? '1px' : '5px'
+												}] `}
+											></span>
+											<p className=' text-[18px] dark:text-white text-slate-700  '>
+												{' '}
+												Inverted
+											</p>
+										</div>
+									</div>
+									<div>
+										<label htmlFor='cb2' className='img_label'>
+											<Image alt="img" onClick={toggleActiveBar} src={BarImg2} />
+										</label>
+										<div className='flex items-center gap-2 '>
+											<span
+												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
+													true ? '1px' : '5px'
+												}] `}
+											></span>
+											<p className=' text-[18px] dark:text-white text-slate-700  '>
+												{' '}
+												Inverted
+											</p>
+										</div>
+									</div>
+									<div>
+										<label htmlFor='cb3' className='img_label'>
+											<Image alt="img" onClick={toggleActiveBar} src={BarImg3} />
+										</label>
+										<div className='flex  items-center gap-2 '>
+											<span
+												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
+													true ? '1px' : '5px'
+												}] `}
+											></span>
+											<p className=' text-[18px] dark:text-white text-slate-700  '>
+												{' '}
+												Inverted
+											</p>
+										</div>
+									</div>
+									<div>
+										<label htmlFor='cb4' className='img_label'>
+											<Image alt="img" onClick={toggleActiveBar} src={BarImg4} />
+										</label>
+										<div className='flex  items-center gap-2 '>
+											<span
+												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
+													true ? '1px' : '5px'
+												}] `}
+											></span>
+											<p className=' text-[18px] dark:text-white text-slate-700  '>
+												{' '}
+												Inverted
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</nav>

@@ -11,6 +11,7 @@ import DashImg from '../../../public/icons/dashboard.svg';
 import { AiFillStar } from 'react-icons/ai';
 
 import instance from './api/api';
+// import { Chart } from '@/components/CHart/Chart';
 
 const ECommerce: React.FC = () => {
 	const [studentsCount, setStudentsCount] = useState<any>(0);
@@ -104,7 +105,7 @@ const ECommerce: React.FC = () => {
 					</svg>
 				</CardDataStats>
 			</div>
-
+{/* <Chart/> */}
 			
 		</>
 	);

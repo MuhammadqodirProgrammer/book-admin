@@ -13,11 +13,13 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import counterSlice from './counterSlice';
+import layoutSlice from './layoutSlice';
 
 // Store yaratish
 const storeTest = configureStore({
 	reducer: {
-		counter: counterSlice,
+		isOpenMenu: counterSlice,
+		positionNav: layoutSlice,
 	},
 });
 
