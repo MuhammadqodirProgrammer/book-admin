@@ -9,8 +9,11 @@ export default function Layout({ children }: any) {
 	const router = useRouter();
 
 	const isOpenMenu = useSelector((state: any) => state.isOpenMenu);
+	const positionNav: any = useSelector((state: any) => state.positionNav);
+	const containerSt: any = useSelector((state: any) => state.containerSt);
 
 	let isOpen = /true/.test(isOpenMenu);
+	let isContainerSt = /true/.test(containerSt);
 	const token =
 		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
@@ -19,9 +22,12 @@ export default function Layout({ children }: any) {
 	} else {
 		// router.replace("/");
 	}
+console.log(isContainerSt ,"isContainerSt ");
 
 	return (
 		<>
+		<div className={` ${isContainerSt ? "my_small_container":""} `}>
+
 			<div>
 				<Header />
 			</div>
@@ -29,11 +35,12 @@ export default function Layout({ children }: any) {
 
 			<div
 				className={` mt-[12vh] min-h-[78vh] ${
-					isOpen ? 'inner_container_right_big' : 'inner_container_right_small'
-				}    `}
+					isOpen && (positionNav =="left") ? 'inner_container_right_big' :  isOpen && (positionNav =="right") ? 'inner_container_right_big_left' :  !isOpen && (positionNav =="left") ? 'inner_container_right_small' : !isOpen && (positionNav =="right") ? 'inner_container_right_small_left' : '' 
+				}   `}
 			>
 				{children}
 			</div>
+		</div>
 		</>
 	);
 }

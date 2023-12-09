@@ -1,11 +1,20 @@
 .navbar {
     position: fixed;
-   
-    top: 10vh;
-  
+
+    top: 70px;
+
     bottom: 0;
     height: 100vh;
 }
+.navbar_absolute {
+    position: absolute !important;
+    top: -60px !important;
+    padding-top: 60px;
+
+  
+}
+
+
 
 .navbar_offcanvas {
     position: fixed;
@@ -17,9 +26,22 @@
     height: 100vh;
     z-index: 999;
 }
+
 .settings_offcanvas {
     position: fixed;
     right: 0;
+    top: 0;
+    background-color: #171923;
+    width: 380px;
+    bottom: 0;
+    height: 100vh;
+    z-index: 999;
+    overflow-y: scroll;
+}
+
+.settings_offcanvas_left {
+    position: fixed;
+    left: 0 !important;
     top: 0;
     background-color: #171923;
     width: 380px;
@@ -34,16 +56,16 @@
 .settings_offcanvas::-webkit-scrollbar {
     width: 5px;
     border-radius: 50%;
-  }
-   
-  .settings_offcanvas::-webkit-scrollbar-track {
+}
+
+.settings_offcanvas::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  }
-   
-  .settings_offcanvas::-webkit-scrollbar-thumb {
+}
+
+.settings_offcanvas::-webkit-scrollbar-thumb {
     background-color: darkgrey;
     outline: 1px solid slategrey;
-  }
+}
 
 
 .nav_link {
@@ -108,4 +130,3 @@
         z-index: 999;
     }
 }
-

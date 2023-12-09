@@ -19,14 +19,15 @@ function Navbar() {
 	const isOpenMenu = useSelector((state: any) => state.isOpenMenu);
 	const positionNav: any = useSelector((state: any) => state.positionNav);
 	let isOpen = /true/.test(isOpenMenu);
-
+	const containerSt: any = useSelector((state: any) => state.containerSt);
+	let iscontainerSt = /true/.test(containerSt);
 	console.log(positionNav, 'positionNav navda');
 	return (
 		<>
 			<nav
 				className={`navbar  shadow z-30 bg-[#fff] dark:bg-topColor hidden md:flex  ${
 					isOpen ? 'w-[300px]' : 'w-[80px]'
-				}  ${positionNav=="left" ? "left-0":"right-0"} `}
+				}  ${positionNav=="right" ? "right-0   ":"left-0 "}  ${iscontainerSt ? "navbar_absolute" :""} `} 
 			>
 				<div className='navbar_box text-black dark:text-mainColor '>
 					<Link className='nav_link' href='/'>

@@ -24,7 +24,7 @@ import { IoSettings } from 'react-icons/io5';
 import { IoColorPaletteSharp } from 'react-icons/io5';
 import { LuArrowRightFromLine } from 'react-icons/lu';
 import { PiArrowsHorizontalBold } from 'react-icons/pi';
-
+import { RiMenu3Fill } from 'react-icons/ri';
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import { menuState } from '../../stores/counterSlice';
@@ -36,9 +36,11 @@ import BarImg2 from '../../../public/images/default.png';
 import BarImg3 from '../../../public/images/inverted.png';
 import BarImg4 from '../../../public/images/vibrant.png';
 import { layoutState } from '@/stores/layoutSlice';
+import { containerState } from '@/stores/containerSlice';
 const Header = () => {
 	const isOpenMenu: any = useSelector((state: any) => state.isOpenMenu);
 	const positionNav: any = useSelector((state: any) => state.positionNav);
+	const containerSt: any = useSelector((state: any) => state.containerSt);
 	const dispatch = useDispatch();
 
 	const pathname = usePathname();
@@ -67,6 +69,9 @@ const Header = () => {
 	const toggleOffcanvas = () => {
 		setOffcanvasOpen(!isOffcanvasOpen);
 	};
+	const toggleSettingsOffCanvas = () => {
+		setSettingsBar(!SettingsBar);
+	};
 
 	const fullScreen = {
 		width: '100%',
@@ -76,6 +81,11 @@ const Header = () => {
 	useEffect(() => {
 		localStorage.setItem('isOpen', isOpenMenu);
 	}, [isOpen]);
+	let isContainerSt = /true/.test(containerSt);
+
+	useEffect(() => {
+		localStorage.setItem('my_container', containerSt);
+	}, [isContainerSt]);
 	useEffect(() => {
 		localStorage.setItem('positionNav', positionNav);
 	}, [positionNav]);
@@ -83,14 +93,21 @@ const Header = () => {
 		e.preventDefault();
 		console.log(e?.target?.classList?.toggle('img_label_border_active'));
 	};
+console.log(isContainerSt ,"isContainerSt header");
 
 	return (
 		<>
 			<header className=' px-3  header bg-[#fff] dark:bg-topColor text-black dark:text-white  fixed w-full z-50 top-0 left-0 flex items-center'>
 				<div
-					className={`flex   m-auto  justify-between w-[${fullScreen?.width}] items-center`}
+					className={`flex    ${
+						positionNav == 'left' ? ' ' : 'flex-row-reverse'
+					} m-auto  justify-between w-[${fullScreen?.width}] items-center  ${isContainerSt ? "my_small_container":""}  `} 
 				>
-					<div className='flex  items-center gap-x-[30px] '>
+					<div
+						className={`flex  items-center gap-x-[30px] ${
+							positionNav == 'right' ? 'flex-row-reverse' : ''
+						}`}
+					>
 						<div
 							className='w-[40px] h-[40px] rounded-full max-[768px]:hidden transition-all hover:bg-slate-700 flex items-center justify-center '
 							data-tooltip-id='my-tooltip'
@@ -98,7 +115,13 @@ const Header = () => {
 							data-tooltip-place='right'
 							onClick={() => dispatch(menuState())}
 						>
-							{isOpen ? <FiMenu /> : <HiMenuAlt1 />}
+							{isOpen ? (
+								<FiMenu />
+							) : positionNav == 'right' ? (
+								<RiMenu3Fill />
+							) : (
+								<HiMenuAlt1 />
+							)}
 
 							<Tooltip id='my-tooltip' />
 						</div>
@@ -107,7 +130,7 @@ const Header = () => {
 							href='/'
 							className='flex items-center font-semibold gap-2 sm:text-[24px]  text-[16px]'
 						>
-							<Image  src={Logo} width={32} height={32} alt='logo' />
+							<Image src={Logo} width={32} height={32} alt='logo' />
 							Book
 						</Link>
 					</div>
@@ -283,13 +306,15 @@ const Header = () => {
 				<hr />
 			</header>
 
-			<div className='postion_st ' onClick={() => setSettingsBar(!SettingsBar)}>
-				<div className='flex justify-center bg-slate-800 cursor-pointer dark:hover:bg-[#8958ea] items-center gap-x-2 py-[5px] px-[10px] -rotate-90  rounded-[8px] translate-y-[-50%] z-50 dark:bg-[#9F7AEA]  text-white'>
-					<IoSettings className='  animate-spin   ' size={25} />
-					<h3 className=' text-[#dbd6d6] font-bold  dark:text-white  uppercase '>
-						customize
-					</h3>
-				</div>
+			<div
+				className={`flex justify-center bg-slate-800 cursor-pointer dark:hover:bg-[#8958ea] items-center gap-x-2 py-[5px] px-[10px]  rounded-[8px]  z-50 dark:bg-[#9F7AEA]  text-white   
+					 ${positionNav == 'left' ? 'postion_st' : 'postion_st_left'} `}
+				onClick={() => setSettingsBar(!SettingsBar)}
+			>
+				<IoSettings className='  animate-spin   ' size={25} />
+				<h3 className=' text-[#dbd6d6] font-bold  dark:text-white  uppercase '>
+					customize
+				</h3>
 			</div>
 
 			{isOffcanvasOpen && (
@@ -616,7 +641,13 @@ const Header = () => {
 			)}
 
 			{SettingsBar && (
-				<nav className='settings_offcanvas    h-screen  '>
+				<nav
+					className={`  h-screen  ${
+						positionNav == 'left'
+							? ' settings_offcanvas'
+							: 'settings_offcanvas_left'
+					}    `}
+				>
 					<div className='h-[10vh] flex items-center  px-3 py-1 justify-between'>
 						<div>
 							<div className='flex items-center gap-x-3'>
@@ -666,7 +697,10 @@ const Header = () => {
 									</p>
 								</div>
 								<button
-									onClick={() => dispatch(layoutState())}
+									onClick={() => {
+										dispatch(layoutState());
+										toggleSettingsOffCanvas();
+									}}
 									className={`switch_btn ${
 										positionNav == 'right' ? 'switch_btn_active' : ''
 									} `}
@@ -686,10 +720,11 @@ const Header = () => {
 								</div>
 
 								<button
-									onClick={() => dispatch(layoutState())}
-									className={`switch_btn ${
-										positionNav == 'right' ? 'switch_btn_active' : ''
-									} `}
+									onClick={() => {
+										dispatch(containerState());
+										toggleSettingsOffCanvas();
+									}}
+									className={`switch_btn  ${isContainerSt ? "":"switch_btn_active"}   `}
 								></button>
 							</div>
 
@@ -710,7 +745,11 @@ const Header = () => {
 								<div className='grid   gap-1 grid-cols-2  '>
 									<div>
 										<label htmlFor='cb1' className='img_label'>
-											<Image alt="img" onClick={toggleActiveBar} src={BarImg1} />
+											<Image
+												alt='img'
+												onClick={toggleActiveBar}
+												src={BarImg1}
+											/>
 										</label>
 										<div className='flex items-center gap-2'>
 											<span
@@ -726,7 +765,11 @@ const Header = () => {
 									</div>
 									<div>
 										<label htmlFor='cb2' className='img_label'>
-											<Image alt="img" onClick={toggleActiveBar} src={BarImg2} />
+											<Image
+												alt='img'
+												onClick={toggleActiveBar}
+												src={BarImg2}
+											/>
 										</label>
 										<div className='flex items-center gap-2 '>
 											<span
@@ -742,7 +785,11 @@ const Header = () => {
 									</div>
 									<div>
 										<label htmlFor='cb3' className='img_label'>
-											<Image alt="img" onClick={toggleActiveBar} src={BarImg3} />
+											<Image
+												alt='img'
+												onClick={toggleActiveBar}
+												src={BarImg3}
+											/>
 										</label>
 										<div className='flex  items-center gap-2 '>
 											<span
@@ -758,7 +805,11 @@ const Header = () => {
 									</div>
 									<div>
 										<label htmlFor='cb4' className='img_label'>
-											<Image alt="img" onClick={toggleActiveBar} src={BarImg4} />
+											<Image
+												alt='img'
+												onClick={toggleActiveBar}
+												src={BarImg4}
+											/>
 										</label>
 										<div className='flex  items-center gap-2 '>
 											<span

@@ -14,12 +14,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterSlice from './counterSlice';
 import layoutSlice from './layoutSlice';
+import countainerSlice from './containerSlice';
 
 // Store yaratish
 const storeTest = configureStore({
 	reducer: {
 		isOpenMenu: counterSlice,
 		positionNav: layoutSlice,
+		containerSt:countainerSlice
 	},
 });
 
