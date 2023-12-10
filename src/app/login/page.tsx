@@ -1,9 +1,8 @@
 'use client';
 import { useRef, useState } from 'react';
-import instance from '../api/api';
+import instance, { apiRoot } from '../api/api';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import toast, { Toaster } from 'react-hot-toast';
-
+import { ToastContainer, toast } from 'react-toastify';
 import logo from '../../../public/images/logo2.png';
 import hand from '../../../public/images/hand.png';
 import eye from '../../../public/images/eye-invisible.png';
@@ -27,22 +26,23 @@ export default function Page() {
 			password: pas,
 		};
 
-		let response = await instance.post('/api/StudentAuth/login', data, {
+		let response: any = await apiRoot.post('auth/adminlogin', data, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-		});
-		if (response?.status === 200) {
-			if (typeof window !== 'undefined') {
-			  let token = response?.data?.token;
-			  localStorage.setItem('token', token);
-		  
-			  loginNotify();
-			  router.replace('/');
-			}
-		  } else {
-			seterror(true);
-		  }
+		}).catch((err:any) =>toast.error("Nimadir hato ketdi qaytadan urinib koring!") );
+		if(response?.status){
+
+			if (response?.status === 201) {
+				if (typeof window !== 'undefined') {
+				  let token = response?.data?.token;
+				  localStorage.setItem('token', token);
+			  
+				  loginNotify();
+				  router.replace('/');
+				}
+			  }
+		}
 		  
 	};
 
@@ -53,8 +53,8 @@ export default function Page() {
 	}
 
 	return (
-		<section className=' flex w-[100%] md:flex-nowrap flex-wrap h-[100vh] bg-[teal] '>
-			<div className='left py-[30px] md:w-[50%] w-[100%] bg-[#E2F0FF]  flex items-center justify-center  '>
+		<section className=' flex w-[100%] md:flex-nowrap fixed top-0 left-0 right-0 bottom-0 flex-wrap h-[100vh] z-50 '>
+			<div className='left py-[30px] md:w-[50%] w-[100%] dark:bg-[#1A202C] bg-[#E2F0FF]  flex items-center justify-center  '>
 				<div className='left_box text-center '>
 					<Image
 						src={logo}
@@ -62,9 +62,9 @@ export default function Page() {
 						className=' w-[300px] h-[280px] objetct-cover   '
 					/>
 
-					<h3 className=' text-[#292731] text-[26px]  my-[20px] '> Login </h3>
+					<h3 className=' text-[#292731] dark:text-[#E2F0FF] text-[26px]  my-[20px] '> Login </h3>
 
-					<p className='  text-[#292731] text-[26px]  my-[20px]  '>
+					<p className='  text-[#292731] dark:text-[#E2F0FF] text-[26px]  my-[20px]  '>
 						Books shop  adminlari uchun
 					</p>
 
@@ -72,14 +72,14 @@ export default function Page() {
 				</div>
 			</div>
 
-			<div className='right py-[30px] md:w-[50%] w-[100%] bg-[#FFFFFF]   flex items-center justify-center  '>
+			<div className='right py-[30px] md:w-[50%] w-[100%] dark:bg-[#171923] bg-[#FFFFFF]   flex items-center justify-center  '>
 				<div className=' md:w-[60%]  w-[80%] mx-auto '>
 					<Image src={hand} alt='img' className='objetct-cover mb-2  ' />
 
-					<h4 className=' text-[#292731] text-[30px]  font-bold my-[20px]  '>
+					<h4 className=' text-[#292731] dark:text-[#E2F0FF] text-[30px]  font-bold my-[20px]  '>
 						Welcome back!
 					</h4>
-					<p className=' text-[#292731] text-[16px]  font-normal my-[20px]  '>
+					<p className=' text-[#292731] dark:text-[#E2F0FF] text-[16px]  font-normal my-[20px]  '>
 						Please login to access your account.
 					</p>
 
@@ -88,7 +88,7 @@ export default function Page() {
 							<div className='flex mb-[12px] justify-between items-center '>
 								<label
 									htmlFor='email'
-									className='block text-xs  text-[#455360]  '
+									className='block text-xs  text-[#455360] dark:text-[#E2F0FF]   '
 								>
 									G-mail
 								</label>
@@ -114,7 +114,7 @@ export default function Page() {
 						<div className='mb-6 md:w-full'>
 							<label
 								htmlFor='email'
-								className='block text-xs  text-[#455360] mb-[12px]  '
+								className='block text-xs  text-[#455360] dark:text-[#E2F0FF]  mb-[12px]  '
 							>
 								Password
 							</label>
@@ -193,21 +193,12 @@ export default function Page() {
 							Log In
 						</button>
 
-						<p className=' text-[#292731] text-[16px] text-center  font-normal my-[20px]  '>
-							Don&apos;t have an account?
-							<a
-								href='#'
-								className='   text-[#66BCE8] text-[16px] font-medium  my-[18px] '
-							>
-								{' '}
-								Sign Up{' '}
-							</a>
-						</p>
+						
 					</form>
 				</div>
 			</div>
 
-			<Toaster />
+			<ToastContainer />
 		</section>
 	);
 }

@@ -18,7 +18,17 @@ const ECommerce: React.FC = () => {
 	const [mentorsCount, setMentorsCount] = useState<any>(0);
 	const [coursesCount, setCoursesCount] = useState<any>(0);
 	const [categoriesCount, setCategoriesCount] = useState<any>(0);
-	// get students
+	
+
+
+ 
+
+
+ 
+
+
+
+
 	const getStudents = async () => {
 		const res = await instance.get(`api/students?page=1`);
 		const courses = await instance.get(`api/courses?page=1`);

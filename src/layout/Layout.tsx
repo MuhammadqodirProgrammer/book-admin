@@ -22,25 +22,33 @@ export default function Layout({ children }: any) {
 	} else {
 		// router.replace("/");
 	}
-console.log(isContainerSt ,"isContainerSt ");
+	console.log(token, 'token ');
 
-	return (
-		<>
-		<div className={` ${isContainerSt ? "my_small_container":""} `}>
+		return (
+			<>
+				<div className={` ${isContainerSt ? 'my_small_container' : ''} `}>
+					<div>
+						<Header />
+					</div>
+					<Navbar />
 
-			<div>
-				<Header />
-			</div>
-			<Navbar />
-
-			<div
-				className={` mt-[12vh] min-h-[78vh] ${
-					isOpen && (positionNav =="left") ? 'inner_container_right_big' :  isOpen && (positionNav =="right") ? 'inner_container_right_big_left' :  !isOpen && (positionNav =="left") ? 'inner_container_right_small' : !isOpen && (positionNav =="right") ? 'inner_container_right_small_left' : '' 
-				}   `}
-			>
-				{children}
-			</div>
-		</div>
-		</>
-	);
+					<div
+						className={` mt-[12vh] min-h-[78vh] ${
+							isOpen && positionNav == 'left'
+								? 'inner_container_right_big'
+								: isOpen && positionNav == 'right'
+								? 'inner_container_right_big_left'
+								: !isOpen && positionNav == 'left'
+								? 'inner_container_right_small'
+								: !isOpen && positionNav == 'right'
+								? 'inner_container_right_small_left'
+								: ''
+						}   `}
+					>
+						{children}
+					</div>
+				</div>
+			</>
+		);
+	
 }

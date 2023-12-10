@@ -7,7 +7,6 @@ import './header.css';
 import Image from 'next/image';
 import Logo from '../../../public/images/logo2.png';
 import adminImg from '../../../public/images/user.png';
-import { ModeToggle } from '@/components/mode-toggle';
 import { PiStudentDuotone } from 'react-icons/pi';
 import { FaBlackTie } from 'react-icons/fa';
 import { RiMovie2Line, RiSoundModuleFill } from 'react-icons/ri';
@@ -97,7 +96,7 @@ console.log(isContainerSt ,"isContainerSt header");
 
 	return (
 		<>
-			<header className=' px-3  header bg-[#fff] dark:bg-topColor text-black dark:text-white  fixed w-full z-50 top-0 left-0 flex items-center'>
+			<header className=' px-3  header bg-[#fff] dark:bg-topColor text-black dark:text-white  fixed w-full z-40 top-0 left-0 flex items-center'>
 				<div
 					className={`flex    ${
 						positionNav == 'left' ? ' ' : 'flex-row-reverse'
@@ -171,7 +170,6 @@ console.log(isContainerSt ,"isContainerSt header");
 							</svg>
 						</button>
 
-						{/* <ModeToggle /> */}
 						<button
 							type='button'
 							className=' header_icons_box'
@@ -206,7 +204,7 @@ console.log(isContainerSt ,"isContainerSt header");
 								<line x1='4.22' y1='19.78' x2='5.64' y2='18.36'></line>
 								<line x1='18.36' y1='5.64' x2='19.78' y2='4.22'></line>
 							</svg>
-							{/* <ModeToggle/> */}
+						
 							<svg
 								className={!active ? '' : 'hidden'}
 								stroke='currentColor'
@@ -307,7 +305,7 @@ console.log(isContainerSt ,"isContainerSt header");
 			</header>
 
 			<div
-				className={`flex justify-center bg-slate-800 cursor-pointer dark:hover:bg-[#8958ea] items-center gap-x-2 py-[5px] px-[10px]  rounded-[8px]  z-50 dark:bg-[#9F7AEA]  text-white   
+				className={`flex justify-center bg-slate-800 cursor-pointer dark:hover:bg-[#8958ea] items-center gap-x-2 py-[5px] px-[10px]  rounded-[8px]  z-40 dark:bg-[#9F7AEA]  text-white   
 					 ${positionNav == 'left' ? 'postion_st' : 'postion_st_left'} `}
 				onClick={() => setSettingsBar(!SettingsBar)}
 			>

@@ -7,6 +7,7 @@ import { ThemeProvider } from 'next-themes';
 import 'react-tooltip/dist/react-tooltip.css';
 import { Provider } from 'react-redux';
 import storeTest from '../stores/store';
+import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ['latin'] });
 
 // export const metadata: Metadata = {

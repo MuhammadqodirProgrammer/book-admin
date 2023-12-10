@@ -11,11 +11,13 @@ import DashImg from '../../../public/icons/dashboard.svg';
 import { AiFillStar } from 'react-icons/ai';
 import Image from 'next/image';
 import { CgLogOut } from 'react-icons/cg';
+import { useRouter } from 'next/navigation'; 
 // redux
 import { useSelector } from 'react-redux';
 
 function Navbar() {
 	const pathname = usePathname();
+	const router = useRouter();
 	const isOpenMenu = useSelector((state: any) => state.isOpenMenu);
 	const positionNav: any = useSelector((state: any) => state.positionNav);
 	let isOpen = /true/.test(isOpenMenu);
@@ -116,11 +118,11 @@ function Navbar() {
 						</button>
 					</Link>
 
-					<Link className='nav_link' href='/comment'>
+					<Link className='nav_link' href='/bookComments'>
 						<button
 							type='button'
 							className={
-								pathname == '/comment'
+								pathname == '/bookComments'
 									? 'active_link nav_link-button'
 									: 'nav_link-button'
 							}
@@ -131,7 +133,7 @@ function Navbar() {
 							</div>
 						</button>
 					</Link>
-					<Link className='nav_link' href='/requirement'>
+					<div className='nav_link' >
 						<button
 							type='button'
 							className={
@@ -139,13 +141,17 @@ function Navbar() {
 									? 'active_link nav_link-button'
 									: 'nav_link-button'
 							}
+							onClick={()=>{
+								router.push("/login")
+								localStorage.removeItem("token")
+							}}
 						>
 							<div className='flex items-center gap-x-2 justify-start'>
 								<CgLogOut />
 								{isOpen && <p className='chakra-text css-0'>LogOut</p>}
 							</div>
 						</button>
-					</Link>
+					</div>
 				</div>
 			</nav>
 		</>

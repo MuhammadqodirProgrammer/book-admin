@@ -1,11 +1,11 @@
 import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 import axios from 'axios';
 
-export const baseUrlImg = 'http://165.227.164.31:4040';
+export const baseUrlImg = 'https://library-backend.uz';
 export const baseUrl = 'http://165.227.164.31:4040/api';
 
-const apiRoot = axios.create({
-	baseURL: `http://161.35.188.153`,
+export const apiRoot = axios.create({
+	baseURL: `https://library-backend.uz/api/`,
 });
 
 const instance = axios.create({
