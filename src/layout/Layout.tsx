@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from './Header/Header';
 import Navbar from './Navbar/Navbar';
 import FamousCourses from '@/components/FamousCourses/FamousCourses';
@@ -14,41 +14,42 @@ export default function Layout({ children }: any) {
 
 	let isOpen = /true/.test(isOpenMenu);
 	let isContainerSt = /true/.test(containerSt);
-	const token =
-		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-	if (!token) {
-		// router.replace("/login");
-	} else {
-		// router.replace("/");
-	}
-	console.log(token, 'token ');
+	useEffect(() => {
+		const token =
+			typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-		return (
-			<>
-				<div className={` ${isContainerSt ? 'my_small_container' : ''} `}>
-					<div>
-						<Header />
-					</div>
-					<Navbar />
-
-					<div
-						className={` mt-[12vh] min-h-[78vh] ${
-							isOpen && positionNav == 'left'
-								? 'inner_container_right_big'
-								: isOpen && positionNav == 'right'
-								? 'inner_container_right_big_left'
-								: !isOpen && positionNav == 'left'
-								? 'inner_container_right_small'
-								: !isOpen && positionNav == 'right'
-								? 'inner_container_right_small_left'
-								: ''
-						}   `}
-					>
-						{children}
-					</div>
+		if (!token) {
+			router.push('/login');
+		} else {
+			router.push('/');
+		}
+		console.log(token, 'token ');
+	}, []);
+	return (
+		<>
+			<div className={` ${isContainerSt ? 'my_small_container' : ''} `}>
+				<div>
+					<Header />
 				</div>
-			</>
-		);
-	
+				<Navbar />
+
+				<div
+					className={` mt-[12vh] min-h-[78vh] ${
+						isOpen && positionNav == 'left'
+							? 'inner_container_right_big'
+							: isOpen && positionNav == 'right'
+							? 'inner_container_right_big_left'
+							: !isOpen && positionNav == 'left'
+							? 'inner_container_right_small'
+							: !isOpen && positionNav == 'right'
+							? 'inner_container_right_small_left'
+							: ''
+					}   `}
+				>
+					{children}
+				</div>
+			</div>
+		</>
+	);
 }
