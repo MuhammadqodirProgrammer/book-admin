@@ -35,7 +35,7 @@ export default function Layout({ children }: any) {
 				<Navbar />
 
 				<div
-					className={` mt-[12vh] min-h-[78vh] ${
+					className={` mt-[80px] min-h-[78vh] ${
 						isOpen && positionNav == 'left'
 							? 'inner_container_right_big'
 							: isOpen && positionNav == 'right'

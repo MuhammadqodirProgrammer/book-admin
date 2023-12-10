@@ -8,7 +8,7 @@ const nextConfig = {
   preload: true,
   images: {
       
-      domains: ["64.227.42.134" ,"165.227.164.31"],
+      domains: ["64.227.42.134" ,"165.227.164.31" ,"library-backend.uz"],
   },
   sassOptions: {
     includePaths: ["path/to/sass/directory"],

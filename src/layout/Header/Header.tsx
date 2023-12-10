@@ -558,13 +558,13 @@ console.log(isContainerSt ,"isContainerSt header");
 							: 'settings_offcanvas_left'
 					}    `}
 				>
-					<div className='h-[10vh] flex items-center  px-3 py-1 justify-between'>
+					<div className='h-[10vh] flex items-center  px-3 py-1 justify-between dark:bg-[#171923] bg-[#6071d6] '>
 						<div>
 							<div className='flex items-center gap-x-3'>
 								<IoColorPaletteSharp size={22} />
 								<h3 className='font-bold text-[22px] '> Settins bar </h3>
 							</div>
-							<p className=' text-slate-200 '>Set your own customized style</p>
+							<p className=' dark:text-slate-200 text-balck '>Set your own customized style</p>
 						</div>
 
 						<button
@@ -602,7 +602,7 @@ console.log(isContainerSt ,"isContainerSt header");
 
 										<h3 className='font-bold text-[20px]  '> RTL Mode </h3>
 									</div>
-									<p className=' text-slate-200  text-[13px]  '>
+									<p className=' dark:text-slate-200 text-balck  text-[13px]  '>
 										Switch your navbar direction
 									</p>
 								</div>
@@ -624,7 +624,7 @@ console.log(isContainerSt ,"isContainerSt header");
 
 										<h3 className='font-bold text-[20px]  '> Fluid Layout</h3>
 									</div>
-									<p className=' text-slate-200  text-[13px]  '>
+									<p className=' dark:text-slate-200 text-balck  text-[13px]  '>
 										Toggle container layout system
 									</p>
 								</div>
@@ -647,7 +647,7 @@ console.log(isContainerSt ,"isContainerSt header");
 										Vertical Navbar Style
 									</h3>
 								</div>
-								<p className=' text-slate-200  text-[13px]  '>
+								<p className=' dark:text-slate-200 text-balck  text-[13px]  '>
 									Switch between styles for your vertical navbar
 								</p>
 
