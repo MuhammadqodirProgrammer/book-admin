@@ -23,7 +23,6 @@ function Navbar() {
 	let isOpen = /true/.test(isOpenMenu);
 	const containerSt: any = useSelector((state: any) => state.containerSt);
 	let iscontainerSt = /true/.test(containerSt);
-	console.log(positionNav, 'positionNav navda');
 	return (
 		<>
 			<nav
