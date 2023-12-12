@@ -4,11 +4,11 @@ import { FaBirthdayCake } from 'react-icons/fa';
 import { FaBook } from 'react-icons/fa';
 import { FaArrowRight } from 'react-icons/fa6';
 import { useEffect, useRef, useState } from 'react';
-import { SkeletonDemo } from '@/components/Skeleton/Skeleton';
+import { SkeletonDemo ,SingleSkeleton } from '@/components/Skeleton/Skeleton';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
 import { Modal } from '@/components/Modal/Modal';
-import { uploadFile, uploadImage } from '@/components/Upload/Upload';
+import {  uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
 import { apiRoot, baseMediaUrl } from '@/app/api/api';
 import { useParams } from 'next/navigation';
@@ -24,6 +24,7 @@ export default function Page() {
 	// Modals state
 	const [EditModal, setEditModal] = useState<any>(false);
 	const [DeleteModal, setDeleteModal] = useState<any>(false);
+	const [isLoading, setIsLoading] = useState<any>(false);
 	// media state
 	const [ImageUrl, setImageUrl] = useState<any>('');
 
@@ -45,6 +46,7 @@ export default function Page() {
 
 		if (resp?.status === 200) {
 			setData(resp?.data?.data);
+			setIsLoading(true)
 			console.log(resp?.data, 'data');
 		}
 	};
@@ -116,7 +118,9 @@ export default function Page() {
 				</h3>
 			</div>
 
-			<div
+{
+	isLoading  ? (
+<div
 				key={data?.id}
 				className='flex  max-sm:flex-wrap gap-3 relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4  w-[100%] max-lg:m-auto'
 			>
@@ -167,10 +171,14 @@ export default function Page() {
 				</div>
 			</div>
 
+	) :<SingleSkeleton/>
+}
+			
+
 			<h3 className=' text-[22px] my-3 dark:text-white text-black text-center '>
 				Author books{' '}
 			</h3>
-			<div className='grid lg:grid-cols-3 max-lg:grid-cols-2  mb-3 max-sm:grid-cols-1  gap-3'>
+			<div className='grid lg:grid-cols-3   max-lg:grid-cols-2  mb-3 max-sm:grid-cols-1  gap-3'>
 				{data?.books?.length
 					? data?.books.map((item: any) => (
 							<div
@@ -190,21 +198,11 @@ export default function Page() {
 								<h6 className='pt-[10px] text-[16px] font-bold text-black dark:text-white'>
 									{item?.book_description}
 								</h6>
-								<div className='flex gap-[6px] py-[15px]'>
+								<div className='flex justify-between items-center  py-[15px]'>
 									<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
 										<IoMdEye size={20} />
 										{item?.number_view}
 									</span>
-								</div>
-								<div className='flex justify-between items-center'>
-							
-									<audio
-										controls
-										src={`${baseMediaUrl}audios/${item?.book_audio}`}
-									>
-										Your browser does not support the
-										<code>audio</code> element.
-									</audio>
 									<div className=' flex items-center gap-2 right-[10px] '>
 										<RiDeleteBin5Fill
 											size={25}
@@ -216,6 +214,18 @@ export default function Page() {
 											className=' text-yellow-400 hover:text-yellow-500 cursor-pointer h-[30px] '
 										/>
 									</div>
+								</div>
+								<div className='flex justify-between items-center'>
+							
+									<audio
+										controls
+										src={`${baseMediaUrl}audios/${item?.book_audio}`}
+										className=" mb-3 "
+									>
+										Your browser does not support the
+										<code>audio</code> element.
+									</audio>
+									
 								</div>
 								<div className='flex '>
 									<FaFileDownload size={20} />

@@ -16,14 +16,15 @@ export function SkeletonDemo() {
   );
 }
 
-export function VideoSkeleton() {
+export function SingleSkeleton() {
   return (
-    <div className="w-[100%] ">
-      <Skeleton className=" min-h-[150px]  min-w-[250px] lg:w-[100%] h-full w-full" />
-        <div className=" my-5 ">
-          <Skeleton className=" mt-2 h-4 w-[80px]" />
-          <Skeleton className=" mt-2 h-3 w-[220px]" />
-          <Skeleton className=" mt-2 h-3 w-[220px]" />
+    <div className="flex  max-sm:flex-wrap gap-3 relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4  w-[100%] max-lg:m-auto ">
+      <Skeleton className="h-[400px] max-sm:h-[280px]  max-sm:w-[100%]  w-[50%] object-cover rounded-lg transition ease-in-out hover:opacity-75 " />
+
+        <div className=" my-5 max-sm:w-[100%]  w-[50%]  ">
+          <Skeleton className=" mt-2 h-4 w-[25%]" />
+          <Skeleton className=" mt-4 h-6 w-[75%]" />
+          <Skeleton className=" mt-4 h-6 w-[75%]" />
         </div>
     </div>
   );

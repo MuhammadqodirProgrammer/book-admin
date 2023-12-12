@@ -14,10 +14,12 @@ import { FaEdit } from 'react-icons/fa';
 import { Modal } from '@/components/Modal/Modal';
 import { uploadFile, uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
+import { Pagination } from '@/components/Pagination/Pagination';
 
 export default function Page() {
 	const [data, setData] = useState<any>([]);
 	const [OneData, setOneData] = useState<any>([]);
+	const [activePage, setActivePage] = useState(1);
 
 	// Modals state
 	const [Create, setCreate] = useState<any>(false);
@@ -40,6 +42,8 @@ export default function Page() {
 
 	const createImg = async (file: any) => {
 		const url = await uploadImage(file);
+		console.log(url ,"urlllllllllllllllllllllllllllllll");
+		
 		setImageUrl(url);
 	};
 	const editImg = async (file: any) => {
@@ -47,11 +51,11 @@ export default function Page() {
 		setImageUrl(url);
 	};
 	const getFunc = async () => {
-		const resp = await apiRoot.get('author');
+		const resp = await apiRoot.get(`author?page=${activePage}&pageSize=6`);
 
 		if (resp?.status === 200) {
 			setData(resp?.data);
-			console.log(resp?.data, 'data');
+		
 		}
 	};
 
@@ -145,8 +149,8 @@ stateRef.current.value=""
 
 	useEffect(() => {
 		getFunc();
-		console.log(data);
-	}, []);
+		console.log(data , "dataaaaaaaaaaaaaaa");
+	}, [activePage]);
 
 	return (
 		<>
@@ -162,8 +166,8 @@ stateRef.current.value=""
 			</div>
 
 			<div className='grid lg:grid-cols-3 max-lg:grid-cols-2  max-sm:grid-cols-1  gap-3 py-3'>
-				{data?.length ? (
-					data.map((item: any) => (
+				{data?.data?.length ? (
+					data?.data?.map((item: any) => (
 						<div
 							key={item?.id}
 							className='flex flex-col relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4 max-lg:w-[90%] max-sm:w-[100%] w-[100%] max-lg:m-auto'
@@ -226,6 +230,15 @@ stateRef.current.value=""
 					<SkeletonDemo />
 				)}
 			</div>
+
+			{
+				data?.data?.length && <Pagination
+				activePage={activePage}
+				setActivePage={setActivePage}
+				totalPage={data?.pageCount}
+			
+			/>
+			}
 
 			{/* create modal  */}
 
