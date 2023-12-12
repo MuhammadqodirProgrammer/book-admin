@@ -10,7 +10,6 @@ import info from '../../../public/images/information.png';
 import dots from '../../../public/images/Caurusel.png';
 import Image from '../../../node_modules/next/image';
 export default function Page() {
-	// const router = useRouter();
 	const router = useRouter();
 	const [error, seterror] = useState<boolean>(false);
 

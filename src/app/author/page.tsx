@@ -161,7 +161,7 @@ stateRef.current.value=""
 				</button>
 			</div>
 
-			<div className='grid lg:grid-cols-3 max-lg:grid-cols-2  max-sm:grid-cols-1  gap-3'>
+			<div className='grid lg:grid-cols-3 max-lg:grid-cols-2  max-sm:grid-cols-1  gap-3 py-3'>
 				{data?.length ? (
 					data.map((item: any) => (
 						<div
@@ -184,7 +184,7 @@ stateRef.current.value=""
 									{item?.birthday?.slice(0, 10)} {item?.state_birth}
 								</span>
 							</div>
-							<div className='flex justify-between'>
+							<div className='flex justify-between items-center'>
 								<span className='flex gap-[5px] mb-3 items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
 									<FaBook size={20} />
 									{item?.books_count}
