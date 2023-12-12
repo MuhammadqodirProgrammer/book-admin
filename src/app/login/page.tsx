@@ -52,7 +52,7 @@ export default function Page() {
 	}
 
 	return (
-		<section className=' flex w-[100%] md:flex-nowrap fixed top-0 left-0 right-0 bottom-0 flex-wrap min-h-[100vh] z-50 '>
+		<section className=' flex w-[100%] md:flex-nowrap fixed top-0 left-0 right-0 bottom-0 flex-wrap min-h-[100vh] overflow-scroll z-50 '>
 			<div className='left py-[30px] md:w-[50%] w-[100%] dark:bg-[#1A202C] bg-[#E2F0FF]  flex items-center justify-center  '>
 				<div className='left_box text-center '>
 					<Image
