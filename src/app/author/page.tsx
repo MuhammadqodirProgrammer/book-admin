@@ -12,7 +12,7 @@ import { SkeletonDemo } from '@/components/Skeleton/Skeleton';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
 import { Modal } from '@/components/Modal/Modal';
-import {uploadFile, uploadImage} from '@/components/Upload/Upload';
+import { uploadFile, uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function Page() {
@@ -22,31 +22,30 @@ export default function Page() {
 	// Modals state
 	const [Create, setCreate] = useState<any>(false);
 	const [EditModal, setEditModal] = useState<any>(false);
-  const [deleteModal, setdeleteModal] = useState<any>(false);
-  // media state 
-  const [Upload, setUpload] = useState<any>("");
-
-
+	const [DeleteModal, setDeleteModal] = useState<any>(false);
+	const [DeleteId, setDeleteId] = useState<any>(false);
+	// media state
+	const [ImageUrl, setImageUrl] = useState<any>('');
 
 	// Refs
 	const nameRef = useRef<any>();
 	const birthdayRef = useRef<any>();
 	const stateRef = useRef<any>();
 
-  const editnameRef = useRef<any>();
+	const editnameRef = useRef<any>();
 	const editbirthdayRef = useRef<any>();
 	const editstateRef = useRef<any>();
 	const token =
 		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-    const createImg = async (file:any)=>{
-      console.log(Upload ,"file");
-      
-      const imgUrl =uploadFile(file)
-      console.log(imgUrl ,"url");
-
-    }
-
+	const createImg = async (file: any) => {
+		const url = await uploadImage(file);
+		setImageUrl(url);
+	};
+	const editImg = async (file: any) => {
+		const url = await uploadImage(file);
+		setImageUrl(url);
+	};
 	const getFunc = async () => {
 		const resp = await apiRoot.get('author');
 
@@ -55,35 +54,95 @@ export default function Page() {
 			console.log(resp?.data, 'data');
 		}
 	};
-	const createFunc = async (evt:any) => {
-       evt.preventDefault()
-    const imgUrl =await uploadImage(Upload)
-    console.log(imgUrl, 'imgUrl');
-    
+
+	const getOneFunc = async (id: any) => {
+		const resp = await apiRoot.get(`author/${id}`);
+		setEditModal(true);
+		setDeleteId(id);
+		console.log(resp?.data, 'data');
+		if (resp?.status === 200) {
+			// setData(resp?.data);
+			setOneData(resp?.data?.data);
+		}
+	};
+	// Create
+	const createFunc = async (evt: any) => {
+		evt.preventDefault();
+
 		const req = {
 			full_name: nameRef?.current?.value,
 			birthday: birthdayRef?.current?.value,
 			state_birth: stateRef?.current?.value,
-			author_image: imgUrl,
+			author_image: ImageUrl,
 		};
-		const resp = await apiRoot.post('author', req, {
+		const resp = await apiRoot
+			.post('author', req, {
+				headers: {
+					Authorization: token,
+				},
+			})
+			.catch((err: any) => {
+				toast.error(err?.response?.data?.message?.[0]);
+			});
+
+		if (resp?.status === 201) {
+			toast.success('Succesfully created');
+			setCreate(false)
+			getFunc();
+			nameRef.current.value=""
+birthdayRef.current.value=""
+stateRef.current.value=""
+		}
+	};
+
+	// edit
+	const editFunc = async (evt: any) => {
+		evt.preventDefault();
+
+		const req = {
+			full_name: editnameRef?.current?.value || OneData?.full_name,
+			birthday: editbirthdayRef?.current?.value || OneData?.birthday,
+			state_birth: editstateRef?.current?.value || OneData?.state_birth,
+			author_image: ImageUrl || OneData?.author_image,
+		};
+
+		const resp = await apiRoot
+			.patch(`author/${DeleteId}`, req, {
+				headers: {
+					Authorization: token,
+				},
+			})
+			.catch((err: any) => {
+				toast.error(err?.response?.data?.message?.[0]);
+			});
+
+		console.log(resp, 'resp');
+
+		if (resp?.status === 200) {
+			setEditModal(false);
+			toast.success('Succesfully edited');
+			getFunc();
+		}
+	};
+	// Delete
+	async function deleteFunc(evt: any) {
+		evt.preventDefault();
+		const res = await apiRoot.delete(`/author/${DeleteId}`, {
 			headers: {
 				Authorization: token,
 			},
-    
-		}).catch((err:any)=>{
-      console.log(err ,"errrrrrrrrrrrrr");
-      toast.error(err?.response?.data?.message?.[0])
-      
-    })
-console.log(resp , "resp");
+		});
+		console.log(res, 'resp');
 
-		if (resp?.status === 201) {
-			toast.success("Succesfully created")
-      getFunc()
-
+		if (res?.status === 200) {
+			toast.success('Successfully deleted ');
+			setDeleteModal(false);
+			getFunc();
+		} else {
+			toast.error('Something went wrong, please try again');
 		}
-	};
+	}
+
 	useEffect(() => {
 		getFunc();
 		console.log(data);
@@ -102,23 +161,13 @@ console.log(resp , "resp");
 				</button>
 			</div>
 
-			<div className='grid lg:grid-cols-3  md:grid-cols-1 grid-cols-1 gap-3'>
+			<div className='grid lg:grid-cols-3 max-lg:grid-cols-2  max-sm:grid-cols-1  gap-3'>
 				{data?.length ? (
 					data.map((item: any) => (
 						<div
 							key={item?.id}
-							className='flex flex-col relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4 max-w-md  max-lg:max-w-full max-lg:m-auto'
+							className='flex flex-col relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4 max-lg:w-[90%] max-sm:w-[100%] w-[100%] max-lg:m-auto'
 						>
-							<div className='absolute top-[10px] flex items-center gap-2 right-[10px] '>
-								<RiDeleteBin5Fill
-									size={25}
-									className=' text-red-700 hover:text-red-900  cursor-pointer h-[30px] '
-								/>
-								<FaEdit
-									size={25}
-									className=' text-yellow-400 hover:text-yellow-600 cursor-pointer h-[30px] '
-								/>
-							</div>
 							<Image
 								className='h-[280px]  w-full object-cover rounded-lg transition ease-in-out hover:opacity-75'
 								src={`${baseMediaUrl}/images/${item?.author_image}`}
@@ -135,10 +184,29 @@ console.log(resp , "resp");
 									{item?.birthday?.slice(0, 10)} {item?.state_birth}
 								</span>
 							</div>
-							<span className='flex gap-[5px] mb-3 items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
-								<FaBook size={20} />
-								{item?.books_count}
-							</span>
+							<div className='flex justify-between'>
+								<span className='flex gap-[5px] mb-3 items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
+									<FaBook size={20} />
+									{item?.books_count}
+								</span>
+								<div className=' flex items-center gap-2 right-[10px] '>
+									<RiDeleteBin5Fill
+										size={25}
+										onClick={() => {
+											setDeleteId(item?.id);
+											setDeleteModal(true);
+										}}
+										className=' text-red-600 hover:text-red-700  cursor-pointer h-[30px] '
+									/>
+									<FaEdit
+										size={25}
+										onClick={() => {
+											getOneFunc(item?.id);
+										}}
+										className=' text-yellow-400 hover:text-yellow-500 cursor-pointer h-[30px] '
+									/>
+								</div>
+							</div>
 							<hr className='h-1 w-full bg-CoursesHr' />
 							<div className='flex justify-between items-center pt-5'>
 								<div className='flex gap-[10px] items-center text-black dark:text-white'>
@@ -172,34 +240,13 @@ console.log(resp , "resp");
 						className='flex flex-col items-center gap-3 justify-center'
 						onSubmit={createFunc}
 					>
-							<input
-								className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
-								placeholder='Author fullName'
-								type='text'
-								ref={nameRef}
-							/>
-							<input
-								className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-								placeholder='Author birthday state'
-								type='text'
-								ref={stateRef}
-							/>
-
-							<input
-								className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-								placeholder='Author birthday '
-								type='date'
-								ref={birthdayRef}
-							/>
-
-						<div className='flex items-center justify-center w-full'>
 							<label
 								htmlFor='dropzone-file'
-								className=' relative flex flex-col items-center justify-center w-full h-[95px] md:h-[165px] border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
+								className=' relative flex flex-col items-center justify-center w-full h-[60px] md:h-[60px] border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
 							>
-								<div className='flex flex-col items-center justify-center pt-3 pb-4'>
+								<div className='flex flex-col items-center justify-center pt-3 pb-3'>
 									<svg
-										className='w-8 h-6 mb-4 text-gray-500 dark:text-gray-400'
+										className='w-6 h-4 mb-2 mt-2 text-gray-500 dark:text-gray-400'
 										aria-hidden='true'
 										xmlns='http://www.w3.org/2000/svg'
 										fill='none'
@@ -219,9 +266,37 @@ console.log(resp , "resp");
 										img
 									</p>
 								</div>
-								<input id='dropzone-file' type='file' className='hidden'  onChange={(evnt:any)=>setUpload(evnt?.target?.files?.[0])} />
+								<input
+									id='dropzone-file'
+									type='file'
+									className='hidden'
+									onChange={(evnt: any) => createImg(evnt?.target?.files?.[0])}
+								/>
 							</label>
-						</div>
+							<input
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
+							placeholder='Author birthday '
+							type='date'
+							ref={birthdayRef}
+						/>
+						<input
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
+							placeholder='Author fullName'
+							type='text'
+							ref={nameRef}
+						/>
+						<input
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
+							placeholder='Author birthday state'
+							type='text'
+							ref={stateRef}
+						/>
+
+			
+
+					
+						
+
 
 						<div className='flex gap-x-2'>
 							<button
@@ -242,7 +317,7 @@ console.log(resp , "resp");
 				</div>
 			</Modal>
 
-			{/* edi modal  */}
+			{/* edit modal  */}
 
 			<Modal
 				width={'900px'}
@@ -253,43 +328,20 @@ console.log(resp , "resp");
 				<div className=' md:p-5 '>
 					<form
 						className='flex flex-col items-center gap-3 justify-center'
-						onSubmit={createFunc}
+						onSubmit={editFunc}
 					>
-						
-							<input
-								className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
-								placeholder='Author fullName'
-								type='text'
-								ref={editnameRef}
-							/>
-						
-							<input
-								className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-								placeholder='Author birthday state '
-								type='text'
-								ref={editstateRef}
-							/>
 
-						
-							<input
-								className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-								placeholder='Author email'
-								type='date'
-								ref={editbirthdayRef}
-							/>
-
-						<div className='flex items-center justify-center w-full'>
 							<label
 								htmlFor='dropzone-file-edit'
 								className=' relative flex flex-col items-center justify-center w-full h-[95px] md:h-[165px] border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
 							>
 								<div className='flex flex-col items-center justify-center pt-3 pb-4'>
-									{OneData?.imagePath ? (
+									{OneData?.author_image ? (
 										<Image
 											width={10000}
 											height={10000}
 											className='w-[100%] object-cover h-[90px] md:h-[160px] rounded-lg absolute left-0 top-0 mb-4 text-gray-500 dark:text-gray-400'
-											src={`${baseUrlImg}/${OneData?.imagePath}`}
+											src={`${baseMediaUrl}/images/${OneData?.author_image}`}
 											alt='img'
 										/>
 									) : (
@@ -314,9 +366,38 @@ console.log(resp , "resp");
 										edit img
 									</p>
 								</div>
-								<input id='dropzone-file-edit' type='file' className='hidden' />
+								<input
+									id='dropzone-file-edit'
+									type='file'
+									className='hidden'
+									onChange={(evt: any) => editImg(evt?.target?.files?.[0])}
+								/>
 							</label>
-						</div>
+<input
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
+							placeholder='Author email'
+							type='date'
+							ref={editbirthdayRef}
+							defaultValue={OneData?.birthday?.slice(0, 10)}
+						/>
+
+						<input
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
+							placeholder='Author fullName'
+							type='text'
+							ref={editnameRef}
+							defaultValue={OneData?.full_name}
+						/>
+
+						<input
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
+							placeholder='Author birthday state '
+							type='text'
+							ref={editstateRef}
+							defaultValue={OneData?.state_birth}
+						/>
+
+	
 
 						<div className='flex gap-x-2'>
 							<button
@@ -337,7 +418,40 @@ console.log(resp , "resp");
 				</div>
 			</Modal>
 
-      <ToastContainer/>
+			{/* delete modal  */}
+
+			<Modal
+				width={' w-[85%] md:w-[600px] '}
+				title={'Delete Author'}
+				modal={DeleteModal}
+				setModal={setDeleteModal}
+			>
+				<div className=' md:p-5 '>
+					<form
+						className='flex flex-col items-center gap-3 justify-center'
+						onSubmit={deleteFunc}
+					>
+						<h2 className='mb-2 text-[22px] text-gray-500 dark:text-gray-400'>
+							{' '}
+							Do you want to delete this Author?{' '}
+						</h2>
+						<div className='flex gap-x-2'>
+							<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
+								Yes
+							</button>
+							<button
+								type='button'
+								className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'
+								onClick={() => setDeleteModal(false)}
+							>
+								Cancel
+							</button>
+						</div>
+					</form>
+				</div>
+			</Modal>
+
+			<ToastContainer />
 		</>
 	);
 }

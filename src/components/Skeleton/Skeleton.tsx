@@ -5,19 +5,13 @@ import Image from "next/image";
 
 export function SkeletonDemo() {
   return (
-    <div>
+    <div className="w-[300px]">
       <Skeleton className=" min-h-[250px]  lg:w-[300px] h-full w-full" />
-      <Skeleton className=" mt-2 h-5 mb-3    lg:w-[21%]  w-full" />
+      <Skeleton className=" mt-2 h-5 mb-3   w-[21%] " />
       <Skeleton className=" mt-2 h-3 lg:w-[71%]  w-full" />
       <Skeleton className=" mt-2 h-3 lg:w-[71%]  w-full" />
-      <div className="flex mt-3  items-center justify-between">
-      
-        
-         
-          <Skeleton className=" mt-2 h-3 w-[220px]" />
-          <Skeleton className=" mt-2 h-3 w-[40px]" />
-       
-      </div>
+          <Skeleton className="  h-3 mt-3 w-full" />
+    
     </div>
   );
 }
