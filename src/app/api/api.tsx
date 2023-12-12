@@ -2,14 +2,16 @@ import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 import axios from 'axios';
 
 export const baseUrlImg = 'https://library-backend.uz';
-export const baseUrl = 'http://165.227.164.31:4040/api';
-
+export const baseUrl = 'https://library-backend.uz/api';
+const token = 	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 export const apiRoot = axios.create({
 	baseURL: `https://library-backend.uz/api/`,
+	
 });
 
 const instance = axios.create({
 	baseURL: 'http://165.227.164.31:4040',
+	
 });
 
 // Interceptors for handling common scenarios

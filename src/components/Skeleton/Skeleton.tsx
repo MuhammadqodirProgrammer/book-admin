@@ -8,15 +8,15 @@ export function SkeletonDemo() {
     <div>
       <Skeleton className=" min-h-[250px]  lg:w-[300px] h-full w-full" />
       <Skeleton className=" mt-2 h-5 mb-3    lg:w-[21%]  w-full" />
-      <Skeleton className=" mt-2 h-3 lg:w-[31%]  w-full" />
-      <Skeleton className=" mt-2 h-3 lg:w-[31%]  w-full" />
-      <div className="flex mt-3 gap-5 items-center">
-        <Skeleton className="w-14 h-14 rounded-full" />
-        <div>
-          <Skeleton className=" mt-2 h-4 w-[80px]" />
+      <Skeleton className=" mt-2 h-3 lg:w-[71%]  w-full" />
+      <Skeleton className=" mt-2 h-3 lg:w-[71%]  w-full" />
+      <div className="flex mt-3  items-center justify-between">
+      
+        
+         
           <Skeleton className=" mt-2 h-3 w-[220px]" />
-          <Skeleton className=" mt-2 h-3 w-[220px]" />
-        </div>
+          <Skeleton className=" mt-2 h-3 w-[40px]" />
+       
       </div>
     </div>
   );

@@ -33,8 +33,8 @@ export const Modal: React.FC<ModalProps> = ({
       className={`overlay   ${modal ? "open" : ""}`}
     >
       <div
-        style={{ width: width }}
-        className={` modal_wrapperModal bg-white dark:bg-topColor `}
+        
+        className={` modal_wrapperModal bg-white dark:bg-topColor md:w-[480px] w-[80%]  `}
       >
         <button
           onClick={() => setModal(false)}
