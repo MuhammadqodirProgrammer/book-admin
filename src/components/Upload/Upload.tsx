@@ -1,4 +1,6 @@
-import {baseUrl} from "../../app/api/api.tsx" 
+
+
+import { baseUrl } from "@/app/api/api";
 
 export const uploadImage = async (file:any) => {
   const token =	typeof window !== 'undefined' ? localStorage.getItem('token') : null;

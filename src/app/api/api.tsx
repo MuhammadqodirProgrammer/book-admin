@@ -2,6 +2,7 @@ import { ErrorModal } from '@/components/ErrorModal/ErrorModal';
 import axios from 'axios';
 
 export const baseUrlImg = 'https://library-backend.uz';
+export const baseMediaUrl = 'https://library-backend.uz/uploads/';
 export const baseUrl = 'https://library-backend.uz/api';
 const token = 	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 export const apiRoot = axios.create({

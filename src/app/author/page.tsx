@@ -7,7 +7,7 @@ import { FaBirthdayCake } from 'react-icons/fa';
 import { FaBook } from 'react-icons/fa';
 import { FaArrowRight } from 'react-icons/fa6';
 import { useEffect, useRef, useState } from 'react';
-import { apiRoot, baseUrlImg } from '../api/api';
+import { apiRoot, baseMediaUrl, baseUrlImg } from '../api/api';
 import { SkeletonDemo } from '@/components/Skeleton/Skeleton';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
@@ -79,7 +79,7 @@ export default function Page() {
 console.log(resp , "resp");
 
 		if (resp?.status === 201) {
-			toast.success(resp?.message)
+			toast.success("Succesfully created")
       getFunc()
 
 		}
@@ -121,7 +121,7 @@ console.log(resp , "resp");
 							</div>
 							<Image
 								className='h-[280px]  w-full object-cover rounded-lg transition ease-in-out hover:opacity-75'
-								src={`${baseUrlImg}/${item?.author_image}`}
+								src={`${baseMediaUrl}/images/${item?.author_image}`}
 								alt='Picture of the author'
 								width={1000}
 								height={1000}
