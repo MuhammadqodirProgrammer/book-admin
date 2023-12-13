@@ -93,7 +93,7 @@ export default function Page() {
 		if (res?.status === 200) {
 			toast.success('Successfully deleted ');
 			setDeleteModal(false);
-			await getFunc();
+			router.push("/author")
 		} else {
 			toast.error('Something went wrong, please try again');
 		}

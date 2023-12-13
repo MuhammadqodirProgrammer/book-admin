@@ -1,18 +1,14 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
-import BgImage from 'public/images/js.webp';
-import profileImg from 'public/images/profile.jpg';
-import { FaBirthdayCake } from 'react-icons/fa';
 import { FaBook } from 'react-icons/fa';
 import { FaArrowRight } from 'react-icons/fa6';
 import { useEffect, useRef, useState } from 'react';
-import { apiRoot, baseMediaUrl, baseUrlImg } from '../api/api';
+import { apiRoot} from '../api/api';
 import { SkeletonDemo } from '@/components/Skeleton/Skeleton';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
+import { TbCategoryFilled } from "react-icons/tb";
 import { Modal } from '@/components/Modal/Modal';
-import { uploadFile, uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
 import { Pagination } from '@/components/Pagination/Pagination';
 
@@ -27,31 +23,15 @@ export default function Page() {
 	const [DeleteModal, setDeleteModal] = useState<any>(false);
 	const [DeleteId, setDeleteId] = useState<any>(false);
 	// media state
-	const [ImageUrl, setImageUrl] = useState<any>('');
 
 	// Refs
 	const nameRef = useRef<any>();
-	const birthdayRef = useRef<any>();
-	const stateRef = useRef<any>();
-
 	const editnameRef = useRef<any>();
-	const editbirthdayRef = useRef<any>();
-	const editstateRef = useRef<any>();
 	const token =
 		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-	const createImg = async (file: any) => {
-		const url = await uploadImage(file);
-		console.log(url ,"urlllllllllllllllllllllllllllllll");
-		
-		setImageUrl(url);
-	};
-	const editImg = async (file: any) => {
-		const url = await uploadImage(file);
-		setImageUrl(url);
-	};
 	const getFunc = async () => {
-		const resp = await apiRoot.get(`author?page=${activePage}&pageSize=6`);
+		const resp = await apiRoot.get(`category?page=${activePage}&pageSize=9`);
 
 		if (resp?.status === 200) {
 			setData(resp?.data);
@@ -60,7 +40,7 @@ export default function Page() {
 	};
 
 	const getOneFunc = async (id: any) => {
-		const resp = await apiRoot.get(`author/${id}`);
+		const resp = await apiRoot.get(`category/${id}`);
 		setEditModal(true);
 		setDeleteId(id);
 		console.log(resp?.data, 'data');
@@ -74,19 +54,24 @@ export default function Page() {
 		evt.preventDefault();
 
 		const req = {
-			full_name: nameRef?.current?.value,
-			birthday: birthdayRef?.current?.value,
-			state_birth: stateRef?.current?.value,
-			author_image: ImageUrl,
+			category_name: nameRef?.current?.value,
+	
 		};
 		const resp = await apiRoot
-			.post('author', req, {
+			.post('category', req, {
 				headers: {
 					Authorization: token,
 				},
 			})
 			.catch((err: any) => {
-				toast.error(err?.response?.data?.message?.[0]);
+				console.log(err , "errrr");
+				
+				if((typeof err?.response?.data?.message)=="object"){
+					toast.error(err?.response?.data?.message?.[0]);
+				}else{
+					toast.error(err?.response?.data?.message);
+
+				}
 			});
 
 		if (resp?.status === 201) {
@@ -94,8 +79,7 @@ export default function Page() {
 			setCreate(false)
 			getFunc();
 			nameRef.current.value=""
-birthdayRef.current.value=""
-stateRef.current.value=""
+
 		}
 	};
 
@@ -104,34 +88,36 @@ stateRef.current.value=""
 		evt.preventDefault();
 
 		const req = {
-			full_name: editnameRef?.current?.value || OneData?.full_name,
-			birthday: editbirthdayRef?.current?.value || OneData?.birthday,
-			state_birth: editstateRef?.current?.value || OneData?.state_birth,
-			author_image: ImageUrl || OneData?.author_image,
+			category_name: editnameRef?.current?.value || OneData?.category_name,
 		};
+console.log(req ,"res edit ");
 
 		const resp = await apiRoot
-			.patch(`author/${DeleteId}`, req, {
+			.patch(`category/${DeleteId}`, req, {
 				headers: {
 					Authorization: token,
 				},
 			})
 			.catch((err: any) => {
-				toast.error(err?.response?.data?.message?.[0]);
-			});
+			
+				if((typeof err?.response?.data?.message)=="object"){
+					toast.error(err?.response?.data?.message?.[0]);
+				}else{
+					toast.error(err?.response?.data?.message);
 
-		console.log(resp, 'resp');
+				}
+			});
 
 		if (resp?.status === 200) {
 			setEditModal(false);
 			toast.success('Succesfully edited');
-			getFunc();
+		await getFunc();
 		}
 	};
 	// Delete
 	async function deleteFunc(evt: any) {
 		evt.preventDefault();
-		const res = await apiRoot.delete(`/author/${DeleteId}`, {
+		const res = await apiRoot.delete(`/category/${DeleteId}`, {
 			headers: {
 				Authorization: token,
 			},
@@ -155,13 +141,13 @@ stateRef.current.value=""
 	return (
 		<>
 			<div className='flex items-center  justify-center  gap-[30px] mb-[15px] '>
-				<h3 className=' text-[22px] dark:text-white text-black  '>Authors </h3>
+				<h3 className=' text-[22px] dark:text-white text-black  '>categorys </h3>
 
 				<button
 					className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
 					onClick={() => setCreate(true)}
 				>
-					Add Author
+					Add category
 				</button>
 			</div>
 
@@ -172,25 +158,20 @@ stateRef.current.value=""
 							key={item?.id}
 							className='flex flex-col relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4 max-lg:w-[90%] max-sm:w-[100%] w-[100%] max-lg:m-auto'
 						>
-							<Image
-								className='h-[280px]  w-full object-cover rounded-lg transition ease-in-out hover:opacity-75'
-								src={`${baseMediaUrl}/images/${item?.author_image}`}
-								alt='Picture of the author'
-								width={1000}
-								height={1000}
-							/>
+						
 							<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
-								{item?.full_name}
+						{item?.category_name}
 							</h6>
 							<div className='flex gap-[6px] py-[15px]'>
 								<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
-									<FaBirthdayCake size={20} />
-									{item?.birthday?.slice(0, 10)} {item?.state_birth}
+									<TbCategoryFilled size={20} />
+									Subcategory count:	{item?.subcategory_count}
 								</span>
 							</div>
 							<div className='flex justify-between items-center'>
 								<span className='flex gap-[5px] mb-3 items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
 									<FaBook size={20} />
+									Books count:
 									{item?.books_count}
 								</span>
 								<div className=' flex items-center gap-2 right-[10px] '>
@@ -218,7 +199,7 @@ stateRef.current.value=""
 									{item?.createdAt?.slice(0, 10)}
 								</div>
 								<Link
-									href={`/author/${item?.id}`}
+									href={`/category/${item?.id}`}
 									className='flex gap-[10px] items-center text-black dark:text-white'
 								>
 									<FaArrowRight size={20} className=' my_animate  ' />
@@ -244,7 +225,7 @@ stateRef.current.value=""
 
 			<Modal
 				width={'900px'}
-				title={'Create Author'}
+				title={'Create category'}
 				modal={Create}
 				setModal={setCreate}
 			>
@@ -253,63 +234,13 @@ stateRef.current.value=""
 						className='flex flex-col items-center gap-3 justify-center'
 						onSubmit={createFunc}
 					>
-							<label
-								htmlFor='dropzone-file'
-								className=' relative flex flex-col items-center justify-center w-full h-[60px] md:h-[60px] border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
-							>
-								<div className='flex flex-col items-center justify-center pt-3 pb-3'>
-									<svg
-										className='w-6 h-4 mb-2 mt-2 text-gray-500 dark:text-gray-400'
-										aria-hidden='true'
-										xmlns='http://www.w3.org/2000/svg'
-										fill='none'
-										viewBox='0 0 20 16'
-									>
-										<path
-											stroke='currentColor'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											strokeWidth={2}
-											d='M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2'
-										/>
-									</svg>
-
-									<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-										<span className='font-semibold'>Click to upload</span> and
-										img
-									</p>
-								</div>
-								<input
-									id='dropzone-file'
-									type='file'
-									className='hidden'
-									onChange={(evnt: any) => createImg(evnt?.target?.files?.[0])}
-								/>
-							</label>
-							<input
-							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-							placeholder='Author birthday '
-							type='date'
-							ref={birthdayRef}
-						/>
+					
 						<input
 							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
-							placeholder='Author fullName'
+							placeholder='category name'
 							type='text'
 							ref={nameRef}
 						/>
-						<input
-							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-							placeholder='Author birthday state'
-							type='text'
-							ref={stateRef}
-						/>
-
-			
-
-					
-						
-
 
 						<div className='flex gap-x-2'>
 							<button
@@ -334,7 +265,7 @@ stateRef.current.value=""
 
 			<Modal
 				width={'900px'}
-				title={'Edit Author'}
+				title={'Edit category'}
 				modal={EditModal}
 				setModal={setEditModal}
 			>
@@ -344,73 +275,14 @@ stateRef.current.value=""
 						onSubmit={editFunc}
 					>
 
-							<label
-								htmlFor='dropzone-file-edit'
-								className=' relative flex flex-col items-center justify-center w-full h-[95px] md:h-[165px] border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
-							>
-								<div className='flex flex-col items-center justify-center pt-3 pb-4'>
-									{OneData?.author_image ? (
-										<Image
-											width={10000}
-											height={10000}
-											className='w-[100%] object-cover h-[90px] md:h-[160px] rounded-lg absolute left-0 top-0 mb-4 text-gray-500 dark:text-gray-400'
-											src={`${baseMediaUrl}/images/${OneData?.author_image}`}
-											alt='img'
-										/>
-									) : (
-										<svg
-											className='w-8 h-6 mb-4 text-gray-500 dark:text-gray-400'
-											aria-hidden='true'
-											xmlns='http://www.w3.org/2000/svg'
-											fill='none'
-											viewBox='0 0 20 16'
-										>
-											<path
-												stroke='currentColor'
-												strokeLinecap='round'
-												strokeLinejoin='round'
-												strokeWidth={2}
-												d='M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2'
-											/>
-										</svg>
-									)}
-									<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-										<span className='font-semibold'>Click to upload</span> and
-										edit img
-									</p>
-								</div>
-								<input
-									id='dropzone-file-edit'
-									type='file'
-									className='hidden'
-									onChange={(evt: any) => editImg(evt?.target?.files?.[0])}
-								/>
-							</label>
-<input
-							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-							placeholder='Author email'
-							type='date'
-							ref={editbirthdayRef}
-							defaultValue={OneData?.birthday?.slice(0, 10)}
-						/>
-
 						<input
 							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
-							placeholder='Author fullName'
+							placeholder='category fullName'
 							type='text'
 							ref={editnameRef}
-							defaultValue={OneData?.full_name}
+							defaultValue={OneData?.category_name}
 						/>
 
-						<input
-							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-							placeholder='Author birthday state '
-							type='text'
-							ref={editstateRef}
-							defaultValue={OneData?.state_birth}
-						/>
-
-	
 
 						<div className='flex gap-x-2'>
 							<button
@@ -435,7 +307,7 @@ stateRef.current.value=""
 
 			<Modal
 				width={' w-[85%] md:w-[600px] '}
-				title={'Delete Author'}
+				title={'Delete category'}
 				modal={DeleteModal}
 				setModal={setDeleteModal}
 			>
@@ -446,7 +318,7 @@ stateRef.current.value=""
 					>
 						<h2 className='mb-2 text-[22px] text-gray-500 dark:text-gray-400'>
 							{' '}
-							Do you want to delete this Author?{' '}
+							Do you want to delete this category?{' '}
 						</h2>
 						<div className='flex gap-x-2'>
 							<button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>

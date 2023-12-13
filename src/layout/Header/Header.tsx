@@ -435,6 +435,7 @@ console.log(isContainerSt ,"isContainerSt header");
 									? 'active_link nav_link-button'
 									: 'nav_link-button'
 							}
+							onClick={toggleOffcanvas}
 						>
 							<div className='flex items-center gap-x-2 justify-start'>
 							<BiCategory size={20}/>
