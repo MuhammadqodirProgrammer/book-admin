@@ -11,7 +11,9 @@ import DashImg from '../../../public/icons/dashboard.svg';
 import { AiFillStar } from 'react-icons/ai';
 import Image from 'next/image';
 import { CgLogOut } from 'react-icons/cg';
-import { useRouter } from 'next/navigation'; 
+import { FaBook } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { BiCategory } from "react-icons/bi";
 // redux
 import { useSelector } from 'react-redux';
 
@@ -28,7 +30,9 @@ function Navbar() {
 			<nav
 				className={`navbar  shadow z-30 bg-[#fff] dark:bg-topColor hidden md:flex  ${
 					isOpen ? 'w-[300px]' : 'w-[80px]'
-				}  ${positionNav=="right" ? "right-0   ":"left-0 "}  ${iscontainerSt ? "navbar_absolute" :""} `} 
+				}  ${positionNav == 'right' ? 'right-0   ' : 'left-0 '}  ${
+					iscontainerSt ? 'navbar_absolute' : ''
+				} `}
 			>
 				<div className='navbar_box text-black dark:text-mainColor '>
 					<Link className='nav_link' href='/'>
@@ -68,20 +72,7 @@ function Navbar() {
 							}
 						>
 							<div className='flex items-center gap-x-2 justify-start'>
-								<svg
-									stroke='currentColor'
-									fill='currentColor'
-									strokeWidth={0}
-									viewBox='0 0 24 24'
-									focusable='false'
-									className='nav_link_icon'
-									height='1em'
-									width='1em'
-									xmlns='http://www.w3.org/2000/svg'
-								>
-									<path fill='none' d='M0 0h24v24H0z' />
-									<path d='M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-2-6H6v-2h12v2zm-4 4H6v-2h8v2z' />
-								</svg>
+							<FaBlackTie size={20}/>
 								{isOpen && <p className='chakra-text css-0'>Author</p>}
 							</div>
 						</button>
@@ -101,6 +92,21 @@ function Navbar() {
 							</div>
 						</button>
 					</Link>
+					<Link className='nav_link' href='/category'>
+						<button
+							type='button'
+							className={
+								pathname == '/category'
+									? 'active_link nav_link-button'
+									: 'nav_link-button'
+							}
+						>
+							<div className='flex items-center gap-x-2 justify-start'>
+							<BiCategory size={20}/>
+								{isOpen && <p className='chakra-text css-0'>Category</p>}
+							</div>
+						</button>
+					</Link>
 					<Link className='nav_link' href='/books'>
 						<button
 							type='button'
@@ -111,7 +117,7 @@ function Navbar() {
 							}
 						>
 							<div className='flex items-center gap-x-2 justify-start'>
-								<FaBlackTie size={20} />
+								<FaBook size={20} />
 								{isOpen && <p className='chakra-text css-0'>Books</p>}
 							</div>
 						</button>
@@ -132,7 +138,7 @@ function Navbar() {
 							</div>
 						</button>
 					</Link>
-					<div className='nav_link' >
+					<div className='nav_link'>
 						<button
 							type='button'
 							className={
@@ -140,9 +146,9 @@ function Navbar() {
 									? 'active_link nav_link-button'
 									: 'nav_link-button'
 							}
-							onClick={()=>{
-								router.push("/login")
-								localStorage.removeItem("token")
+							onClick={() => {
+								router.push('/login');
+								localStorage.removeItem('token');
 							}}
 						>
 							<div className='flex items-center gap-x-2 justify-start'>

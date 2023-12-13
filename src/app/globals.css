@@ -258,4 +258,8 @@ ul {
   animation: bounce 1s infinite !important;
 }
 
+body{
+  overflow-x: hidden !important;
+}
+
 
