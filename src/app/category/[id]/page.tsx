@@ -183,12 +183,7 @@ console.log(req , "edit req");
 									{item?.subcategory_name}
 								</h6>
 								
-								<div className='flex justify-between items-center  py-[15px]'>
-									<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
-										<IoMdEye size={20} />
-										{item?.number_view}
-									</span>
-									<div className=' flex items-center gap-2 right-[10px] '>
+								<div className=' flex items-center gap-2 right-[10px] '>
 										<RiDeleteBin5Fill
 											size={25}
 											onClick={() => {}}
@@ -199,20 +194,8 @@ console.log(req , "edit req");
 											className=' text-yellow-400 hover:text-yellow-500 cursor-pointer h-[30px] '
 										/>
 									</div>
-								</div>
-								<div className='flex justify-between items-center'>
-									<audio
-										controls
-										src={`${baseMediaUrl}audios/${item?.book_audio}`}
-										className=' mb-3 '
-									>
-										Your browser does not support the
-										<code>audio</code> element.
-									</audio>
-								</div>
-								<div className='flex '>
-									<FaFileDownload size={20} />
-								</div>
+							
+							
 								<hr className='h-1 w-full bg-CoursesHr' />
 								<div className='flex justify-between items-center pt-5'>
 									<div className='flex gap-[10px] items-center text-black dark:text-white'>
