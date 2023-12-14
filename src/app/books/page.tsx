@@ -180,7 +180,8 @@ stateRef.current.value=""
 								height={1000}
 							/>
 							<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
-								{item?.full_name}
+								
+								{item?.full_name?.length > 25 ? item?.full_name?.slice(0, 23 ) +".." :item?.full_name}
 							</h6>
 							<div className='flex gap-[6px] py-[15px]'>
 								<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>

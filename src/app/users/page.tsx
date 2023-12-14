@@ -196,10 +196,11 @@ export default function Page() {
 								height={1000}
 							/>
 							<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
-								{item?.full_name}
+								
+								{item?.full_name?.length > 25 ? item?.full_name?.slice(0, 23) +".." :item?.full_name}
 							</h6>
-							<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
-								{item?.email}
+							<h6 className='pt-[10px] text-[18px] font-bold text-black dark:text-white'>
+								{item?.email?.length > 20 ? item?.email?.slice(0, 18) +".." :item?.email}
 							</h6>
 
 							<div className='flex justify-between items-center'>
