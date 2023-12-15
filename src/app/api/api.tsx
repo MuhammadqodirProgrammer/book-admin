@@ -7,6 +7,7 @@ export const baseUrl = 'https://library-backend.uz/api';
 const token = 	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 export const apiRoot = axios.create({
 	baseURL: `https://library-backend.uz/api/`,
+	// withCredentials: true,
 	
 });
 

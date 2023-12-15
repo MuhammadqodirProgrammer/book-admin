@@ -10,7 +10,7 @@ import { FaEdit } from 'react-icons/fa';
 import { Modal } from '@/components/Modal/Modal';
 import { uploadAudio, uploadFile, uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
-import { apiRoot, baseMediaUrl } from '@/app/api/api';
+import { apiRoot, baseMediaUrl, baseUrl } from '@/app/api/api';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeftLong } from 'react-icons/fa6';
@@ -78,11 +78,27 @@ export default function Page() {
 		}
 	};
 	const checkView = async (book_id:any) => {
-		const resp:any = await apiRoot.get(`check/view/${book_id}`);
+		const resp:any = await apiRoot.get(`check/view/${book_id}` ,{
+			// withCredentials = true
+		});
 		console.log(resp?.data, 'check func');
 
 	
 	};
+
+	const getMeals = async (book_id: any) => {
+		let res= await fetch(`${baseUrl}/check/view/${book_id}`, {
+		  method: "GET",
+		  credentials: "same-origin",
+		  headers: {
+			"Content-Type": "application/json",
+		  },
+		});
+	
+		const data = await res.json();
+	
+		console.log(data);
+	  }
 	// edit
 	const editFunc = async (evt: any) => {
 		evt.preventDefault();

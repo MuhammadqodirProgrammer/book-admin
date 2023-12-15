@@ -7,7 +7,7 @@ import { FaBirthdayCake } from 'react-icons/fa';
 import { FaBook } from 'react-icons/fa';
 import { FaArrowRight } from 'react-icons/fa6';
 import { useEffect, useRef, useState } from 'react';
-import { apiRoot, baseMediaUrl, baseUrlImg } from '../api/api';
+import { apiRoot, baseMediaUrl, baseUrl, baseUrlImg } from '../api/api';
 import { SkeletonDemo } from '@/components/Skeleton/Skeleton';
 import { RiDeleteBin5Fill } from 'react-icons/ri';
 import { FaEdit } from 'react-icons/fa';
@@ -22,7 +22,9 @@ import {
 } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
 import { Pagination } from '@/components/Pagination/Pagination';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 export default function Page() {
 	const [data, setData] = useState<any>([]);
 	const [OneData, setOneData] = useState<any>([]);
@@ -256,7 +258,8 @@ console.log(editAudioUrl ,"editAudioUrl req ");
 	}
 
 	const checkView = async (book_id: any) => {
-		const resp:any = await apiRoot.get(`check/view/${book_id}`);
+		const resp:any = await apiRoot.get(`check/view/${book_id}` ,{ withCredentials: true });
+		
 		if (
 			resp?.message == 'Increase the number of views of the book by 1' &&
 			resp?.status == 200
@@ -265,10 +268,27 @@ console.log(editAudioUrl ,"editAudioUrl req ");
 		}
 	};
 
+	// const checkView = async (book_id: any) => {
+	// 	let res= await fetch(`${baseUrl}/check/view/${book_id}`, {
+	// 	  method: "GET",
+	// 	  credentials: "same-origin",
+	// 	  headers: {
+	// 		"Content-Type": "application/json",
+	// 	  },
+	// 	});
+	
+	// 	const data = await res.json();
+	
+	// 	console.log(data);
+	//   }
+console.log(cookies.get("mykey") ,"cookies");
+
 	useEffect(() => {
 		getFunc();
 	}, [activePage]);
 	useEffect(() => {
+	
+		
 		getSelectData();
 	}, []);
 
