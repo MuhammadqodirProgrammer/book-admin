@@ -14,7 +14,7 @@ import { FaEdit } from 'react-icons/fa';
 import { IoMdEye } from 'react-icons/io';
 import { FaFileDownload } from 'react-icons/fa';
 import { IoMdCloudUpload } from 'react-icons/io';
-import { Modal } from '@/components/Modal/Modal';
+import { FileModal, Modal } from '@/components/Modal/Modal';
 import {
 	uploadAudio,
 	uploadFile,
@@ -36,6 +36,7 @@ export default function Page() {
 	const [EditModal, setEditModal] = useState<any>(false);
 	const [DeleteModal, setDeleteModal] = useState<any>(false);
 	const [DeleteId, setDeleteId] = useState<any>(false);
+	const [ViewModal, setViewModal] = useState<any>(false);
 	// media state
 	const [ImageUrl, setImageUrl] = useState<any>('');
 	const [AudioUrl, setAudioUrl] = useState<any>('');
@@ -44,6 +45,7 @@ export default function Page() {
 	const [editAudioUrl, setEditAudioUrl] = useState<any>('');
 	const [editFileUrl, setEditFileUrl] = useState<any>('');
 	const [OneId, setOneId] = useState<any>('');
+	const [embedUrl, setEmbedUrl] = useState<any>('');
 
 	// Refs
 
@@ -51,7 +53,7 @@ export default function Page() {
 	const stateRef = useRef<any>();
 	const book_titleRef = useRef<any>();
 	const book_descriptionRef = useRef<any>();
-	const state_birthRef = useRef<any>();
+	
 	const date_writtenRef = useRef<any>();
 	const category_idRef = useRef<any>();
 	const author_idRef = useRef<any>();
@@ -61,7 +63,6 @@ export default function Page() {
 	const editstateRef = useRef<any>();
 	const editbook_titleRef = useRef<any>();
 	const editbook_descriptionRef = useRef<any>();
-	const editstate_birthRef = useRef<any>();
 	const editdate_writtenRef = useRef<any>();
 	const editcategory_idRef = useRef<any>();
 	const editauthor_idRef = useRef<any>();
@@ -75,17 +76,13 @@ export default function Page() {
 		const subcategory = await apiRoot.get(`subcategory`);
 		console.log(author?.data?.data, 'author');
 
-	
-
 		if (author?.status === 200) {
 			setAuthorData(author?.data?.data);
 			setCategoryData(category?.data?.data);
 			setSubCategoryData(subcategory?.data);
 		}
 	};
-	useEffect(() => {
-		getSelectData();
-	}, []);
+
 	//upload funcs for  create
 	const createImg = async (file: any) => {
 		const url = await uploadImage(file);
@@ -105,18 +102,16 @@ export default function Page() {
 	//upload funcs for  edit
 	const editcreateImg = async (file: any) => {
 		const url = await uploadImage(file);
-		console.log(url, 'urlllllllllllllllllllllllllllllll');
-		setImageUrl(url);
+		setEditImageUrl(url);
 	};
 	const editcreateAudio = async (file: any) => {
 		const url = await uploadAudio(file);
 		console.log(url, 'urlllllllllllllllllllllllllllllll');
-		setAudioUrl(url);
+		setEditAudioUrl(url);
 	};
 	const editcreateFile = async (file: any) => {
 		const url = await uploadFile(file);
-		console.log(url, 'createFile url');
-		setFileUrl(url);
+		setEditFileUrl(url);
 	};
 
 	const editImg = async (file: any) => {
@@ -142,22 +137,35 @@ export default function Page() {
 			setOneData(resp?.data);
 		}
 	};
+	type createType = {
+		book_title: any;
+		book_description: any;
+		date_written: any;
+		category_id: any;
+		author_id: any;
+		subcategory_id: any;
+		book_file: any;
+		book_image: any;
+		book_audio?: any;
+	};
 	// Create
 	const createFunc = async (evt: any) => {
 		evt.preventDefault();
 
-		const req = {
+		const req: createType = {
 			book_title: book_titleRef?.current?.value,
 			book_description: book_descriptionRef?.current?.value,
-			state_birth: stateRef?.current?.value,
 			date_written: date_writtenRef?.current?.value,
 			category_id: category_idRef?.current?.value,
 			author_id: author_idRef?.current?.value,
 			subcategory_id: subcategory_idRef?.current?.value,
 			book_file: FileUrl,
 			book_image: ImageUrl,
-			book_audio: AudioUrl,
 		};
+
+		if (AudioUrl) {
+			req.book_audio = AudioUrl;
+		}
 
 		const resp = await apiRoot
 			.post('books', req, {
@@ -192,17 +200,21 @@ export default function Page() {
 		evt.preventDefault();
 
 		const req = {
-			book_title: editbook_titleRef?.current?.value  || OneData?.book_title,
-			book_description: editbook_descriptionRef?.current?.value  || OneData?.book_description,
-			state_birth: editstateRef?.current?.value  || OneData?.state_birth,
-			date_written: editdate_writtenRef?.current?.value  || OneData?.date_written,
-			category_id: editcategory_idRef?.current?.value  || OneData?.category_id,
-			author_id: editauthor_idRef?.current?.value  || OneData?.author_id,
-			subcategory_id: editsubcategory_idRef?.current?.value  || OneData?.subcategory_id,
+			book_title: editbook_titleRef?.current?.value || OneData?.book_title,
+			book_description:
+				editbook_descriptionRef?.current?.value || OneData?.book_description,
+			date_written:
+				editdate_writtenRef?.current?.value || OneData?.date_written,
+			category_id: editcategory_idRef?.current?.value || OneData?.category_id,
+			author_id: editauthor_idRef?.current?.value || OneData?.author_id,
+			subcategory_id:
+				editsubcategory_idRef?.current?.value || OneData?.subcategory_id,
 			book_file: editFileUrl || OneData?.book_file,
 			book_image: editImageUrl || OneData?.book_image,
 			book_audio: editAudioUrl || OneData?.book_audio,
 		};
+console.log(req ,"edit req ");
+console.log(editAudioUrl ,"editAudioUrl req ");
 
 		const resp = await apiRoot
 			.patch(`books/${OneId}`, req, {
@@ -218,17 +230,16 @@ export default function Page() {
 				}
 			});
 
-		if (resp?.status === 201) {
-			toast.success('Succesfully created');
-			setCreate(false);
+		if (resp?.status === 200) {
+			toast.success('Succesfully edited');
+			setEditModal(false);
 			await getFunc();
-		
 		}
 	};
 	// Delete
 	async function deleteFunc(evt: any) {
 		evt.preventDefault();
-		const res = await apiRoot.delete(`/book/${OneId}`, {
+		const res = await apiRoot.delete(`/books/${OneId}`, {
 			headers: {
 				Authorization: token,
 			},
@@ -244,10 +255,22 @@ export default function Page() {
 		}
 	}
 
+	const checkView = async (book_id: any) => {
+		const resp:any = await apiRoot.get(`check/view/${book_id}`);
+		if (
+			resp?.message == 'Increase the number of views of the book by 1' &&
+			resp?.status == 200
+		) {
+			getFunc();
+		}
+	};
+
 	useEffect(() => {
 		getFunc();
-		console.log(data, 'dataaaaaaaaaaaaaaa');
 	}, [activePage]);
+	useEffect(() => {
+		getSelectData();
+	}, []);
 
 	return (
 		<>
@@ -279,23 +302,49 @@ export default function Page() {
 							<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
 								{item?.book_title}
 							</h6>
+
 							<h6 className='pt-[10px] text-[16px] font-bold text-black dark:text-white'>
-								{item?.book_description}
+								{item?.book_description?.length > 85
+									? item?.book_description?.slice(0, 82) + '..'
+									: item?.book_description}
 							</h6>
-							
+
 							<div className='flex justify-between items-center my-2'>
-								<audio
-									controls
-									src={`${baseMediaUrl}audios/${item?.book_audio}`}
-									className=' mb-3 '
+								{item?.book_audio && (
+									<audio
+										controls
+										onPlay={() => checkView(item?.id)}
+										src={`${baseMediaUrl}audios/${item?.book_audio}`}
+										className=' mb-3 border-[2px]  h-[34px] border-dotted rounded-full border-mainColor '
+									>
+										Your browser does not support the
+										<code>audio</code> element.
+									</audio>
+								)}
+							</div>
+
+							<h3>
+								<a
+									onClick={() => checkView(item?.id)}
+									target='_blank'
+									className=' text-[18px] text-mainColor  font-bold  cursor-pointer  '
+									href={`${baseMediaUrl}/files/${item?.book_file}`}
 								>
-									Your browser does not support the
-									<code>audio</code> element.
-								</audio>
-							</div>
-							<div className='flex '>
-								<FaFileDownload size={20} />
-							</div>
+									Download
+								</a>{' '}
+								the file or{' '}
+								<span
+									className='text-[18px] text-mainColor  font-bold  cursor-pointer '
+									onClick={() => {
+										setEmbedUrl(item?.book_file);
+										checkView(item?.id);
+										setViewModal(true);
+									}}
+								>
+									View
+								</span>{' '}
+								here
+							</h3>
 
 							<div className='flex justify-between items-center  py-[15px]'>
 								<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
@@ -306,8 +355,8 @@ export default function Page() {
 									<RiDeleteBin5Fill
 										size={25}
 										onClick={() => {
-											setDeleteModal(true)
-											setOneId(item?.id)
+											setDeleteModal(true);
+											setOneId(item?.id);
 										}}
 										className=' text-red-600 hover:text-red-700  cursor-pointer h-[30px] '
 									/>
@@ -326,6 +375,12 @@ export default function Page() {
 									<p>Created:</p>
 									{item?.createdAt?.slice(0, 10)}
 								</div>
+								<Link
+									href={`/books/${item?.id}`}
+									className='flex gap-[10px] items-center text-black dark:text-white'
+								>
+									<FaArrowRight size={20} className=' my_animate  ' />
+								</Link>
 							</div>
 						</div>
 					))
@@ -357,6 +412,7 @@ export default function Page() {
 					>
 						<label
 							htmlFor='audio_file'
+							title='Bosing va Audio yuklang!'
 							className=' relative flex flex-col items-center justify-center w-full h-[50px]  border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
 						>
 							<div className='flex flex-col items-center justify-center pt-3 pb-3'>
@@ -376,20 +432,22 @@ export default function Page() {
 
 						<label
 							htmlFor='for_file'
+							title='Bosing va File yuklang!'
 							className=' relative flex flex-col items-center justify-center w-full h-[50px]  border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
 						>
 							<div className='flex flex-col items-center justify-center pt-3 pb-3'>
 								<IoMdCloudUpload className='w-6 h-4 mb-1 mt-2 text-gray-500 dark:text-gray-400' />
 								<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-									<span className='font-semibold'>Click to upload file,</span>
-									this optional
+									<span className='font-semibold'>Click to upload file, </span>
+									only pdf
 								</p>
 							</div>
 							<input
 								id='for_file'
 								type='file'
 								className='hidden'
-								accept="application/pdf"
+								accept='application/pdf'
+								required
 								onChange={(evnt: any) => createFile(evnt?.target?.files?.[0])}
 							/>
 						</label>
@@ -418,27 +476,36 @@ export default function Page() {
 							placeholder='Book title '
 							type='text'
 							ref={book_titleRef}
+							required
 						/>
 
-					
-<textarea name="" id="" cols={30} rows={2}  className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
-							placeholder='description' 	ref={book_descriptionRef} ></textarea>
+						<textarea
+							name=''
+							id=''
+							cols={30}
+							rows={2}
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
+							placeholder='description'
+							ref={book_descriptionRef}
+						></textarea>
 
 						<div className='flex w-full gap-2 items-center '>
 							<input
 								className='w-[48%] p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-								placeholder='state_birth state'
+								placeholder='date written '
 								type='date'
+								required
 								ref={date_writtenRef}
 							/>
 
 							<select
 								className='w-[48%] p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
 								ref={author_idRef}
+								required
 							>
 								{AuthorData.length ? (
 									AuthorData.map((item: any) => (
-										<option value={item?.id}> {item?.category_name}</option>
+										<option value={item?.id}> {item?.full_name}</option>
 									))
 								) : (
 									<option value='value' disabled>
@@ -452,6 +519,7 @@ export default function Page() {
 							<select
 								className='w-[48%] p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
 								ref={category_idRef}
+								required
 							>
 								{CategoryData.length ? (
 									CategoryData.map((item: any) => (
@@ -466,6 +534,7 @@ export default function Page() {
 							<select
 								className='w-[48%] p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
 								ref={subcategory_idRef}
+								required
 							>
 								{SubCategoryData.length ? (
 									SubCategoryData.map((item: any) => (
@@ -519,8 +588,8 @@ export default function Page() {
 							<div className='flex flex-col items-center justify-center pt-3 pb-3'>
 								<IoMdCloudUpload className='w-6 h-4 mb-1 mt-2 text-gray-500 dark:text-gray-400' />
 								<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-									<span className='font-semibold'> Click to upload  </span>edit audio 
-									
+									<span className='font-semibold'> Click to upload </span>edit
+									audio
 								</p>
 							</div>
 							<input
@@ -541,7 +610,8 @@ export default function Page() {
 							<div className='flex flex-col items-center justify-center pt-3 pb-3'>
 								<IoMdCloudUpload className='w-6 h-4 mb-1 mt-2 text-gray-500 dark:text-gray-400' />
 								<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
-									<span className='font-semibold'>Click to upload </span> edit file
+									<span className='font-semibold'>Click to upload </span> edit
+									file
 								</p>
 							</div>
 							<input
@@ -560,19 +630,17 @@ export default function Page() {
 							className=' relative flex flex-col items-center justify-center w-full h-[50px]  border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
 						>
 							<div className='flex flex-col items-center justify-center pt-3 pb-3'>
-							{OneData?.book_image ? (
-										<Image
-											width={10000}
-											height={10000}
-											className='w-[100%] object-cover h-[50px]  rounded-lg absolute left-0 top-0 mb-4 text-gray-500 dark:text-gray-400'
-											src={`${baseMediaUrl}/images/${OneData?.book_image}`}
-											alt='img'
-										/>
-									) : (
-										<IoMdCloudUpload className='w-6 h-4 mb-1 mt-2 text-gray-500 dark:text-gray-400' />
-									)}
-
-								
+								{OneData?.book_image ? (
+									<Image
+										width={10000}
+										height={10000}
+										className='w-[100%] object-cover h-[50px]  rounded-lg absolute left-0 top-0 mb-4 text-gray-500 dark:text-gray-400'
+										src={`${baseMediaUrl}/images/${OneData?.book_image}`}
+										alt='img'
+									/>
+								) : (
+									<IoMdCloudUpload className='w-6 h-4 mb-1 mt-2 text-gray-500 dark:text-gray-400' />
+								)}
 
 								<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
 									<span className='font-semibold'>Click to upload img</span>
@@ -596,15 +664,21 @@ export default function Page() {
 							defaultValue={OneData?.book_title}
 						/>
 
-						<textarea name="" id="" cols={30} rows={2}  className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
-						placeholder='description'
+						<textarea
+							name=''
+							id=''
+							cols={30}
+							rows={2}
+							className='w-full p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent '
+							placeholder='description'
 							ref={editbook_descriptionRef}
-							defaultValue={OneData?.book_description} ></textarea>
+							defaultValue={OneData?.book_description}
+						></textarea>
 
 						<div className='flex w-full gap-2 items-center '>
 							<input
 								className='w-[48%] p-2 border rounded  border-gray-500 outline-none   dark:focus:border-blue-500  focus:border-blue-500  dark:bg-gray-700 bg-transparent  '
-								placeholder='state_birth state'
+								placeholder='date written'
 								type='date'
 								ref={editdate_writtenRef}
 								defaultValue={OneData?.date_written?.slice(0, 10)}
@@ -644,22 +718,20 @@ export default function Page() {
 							>
 								{CategoryData.length ? (
 									CategoryData.map((item: any) => {
-										console.log(OneData , "OneData");
-										
-											if (item?.category_name == OneData?.category?.category_name) {
-												return (
-													<option selected value={item?.id}>
-														
-														{item?.category_name}
-													</option>
-												);
-											} else {
-												return (
-													<option value={item?.id}> {item?.category_name}</option>
-												);
-											}
-									}
-									)
+										if (
+											item?.category_name == OneData?.category?.category_name
+										) {
+											return (
+												<option selected value={item?.id}>
+													{item?.category_name}
+												</option>
+											);
+										} else {
+											return (
+												<option value={item?.id}> {item?.category_name}</option>
+											);
+										}
+									})
 								) : (
 									<option value='value' disabled>
 										No category
@@ -673,21 +745,25 @@ export default function Page() {
 								{SubCategoryData.length ? (
 									SubCategoryData.map((item: any) => {
 										// console.log(item ,"subb itemmmmmm");
-										
-										if (item?.subcategory_name == OneData?.category?.subcategory_name) {
+
+										if (
+											item?.subcategory_name ==
+											OneData?.subcategory?.subcategory_name
+										) {
 											return (
 												<option selected value={item?.id}>
-													
 													{item?.subcategory_name}
 												</option>
 											);
 										} else {
 											return (
-												<option value={item?.id}> {item?.subcategory_name}</option>
+												<option value={item?.id}>
+													{' '}
+													{item?.subcategory_name}
+												</option>
 											);
 										}
-									}
-									)
+									})
 								) : (
 									<option value='value' disabled>
 										No subcategory
@@ -719,7 +795,7 @@ export default function Page() {
 
 			<Modal
 				width={' w-[85%] md:w-[600px] '}
-				title={'Delete Author'}
+				title={'Delete Book'}
 				modal={DeleteModal}
 				setModal={setDeleteModal}
 			>
@@ -747,6 +823,20 @@ export default function Page() {
 					</form>
 				</div>
 			</Modal>
+
+			<FileModal
+				width={' w-[85%] md:w-[600px] '}
+				title={'Delete Author'}
+				modal={ViewModal}
+				setModal={setViewModal}
+			>
+				<embed
+					src={`${baseMediaUrl}/files/${embedUrl}`}
+					type='application/pdf'
+					width='100%'
+					className='h-[90vh]'
+				/>
+			</FileModal>
 
 			<ToastContainer />
 		</>

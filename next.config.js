@@ -13,7 +13,7 @@ const nextConfig = {
   sassOptions: {
     includePaths: ["path/to/sass/directory"],
   },
-  
+  swcMinify: false,
 };
 
 module.exports = nextConfig;

@@ -52,3 +52,42 @@ export const Modal: React.FC<ModalProps> = ({
     </div>
   );
 };
+
+export const FileModal: React.FC<ModalProps> = ({
+  modal,
+  setModal,
+  children,
+  title,
+ 
+}) => {
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  const handleOverlay = (evt: React.MouseEvent<HTMLDivElement>) => {
+    if (evt.target === overlayRef.current) {
+      setModal(false);
+    }
+  };
+
+  return (
+    <div
+      ref={overlayRef}
+      onClick={handleOverlay}
+      className={`overlay   ${modal ? "open" : ""}`}
+    >
+      <div
+        
+        className={`  h-[90vh]   w-[90%]  `}
+      >
+        <button
+          onClick={() => setModal(false)}
+          className={`btn modal_button text-black dark:text-white  rounded-0`}
+        >
+          <AiOutlineClose size={20} />
+        </button>
+       
+        <div className={`h-auto `}>{children}</div>
+      </div>
+    </div>
+  );
+};
+
