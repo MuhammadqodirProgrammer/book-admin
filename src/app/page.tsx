@@ -10,8 +10,16 @@ import { RiMovie2Line, RiSoundModuleFill } from 'react-icons/ri';
 import { LiaCommentDotsSolid } from 'react-icons/lia';
 import DashImg from '../../../public/icons/dashboard.svg';
 import { AiFillStar } from 'react-icons/ai';
+import { IoMdEye } from 'react-icons/io';
+import { FaArrowRight } from 'react-icons/fa6';
+import { FaPencil } from "react-icons/fa6";
 
-import instance, { apiRoot } from './api/api';
+import instance, { apiRoot, baseMediaUrl } from './api/api';
+import Image from '../../node_modules/next/image';
+import Link from '../../node_modules/next/link';
+import { SkeletonDemo } from '@/components/Skeleton/Skeleton';
+import { Pagination } from '@/components/Pagination/Pagination';
+import { FileModal } from '@/components/Modal/Modal';
 // import { Chart } from '@/components/CHart/Chart';
 
 const ECommerce: React.FC = () => {
@@ -19,6 +27,10 @@ const ECommerce: React.FC = () => {
 	const [mentorsCount, setMentorsCount] = useState<any>(0);
 	const [coursesCount, setCoursesCount] = useState<any>(0);
 	const [categoriesCount, setCategoriesCount] = useState<any>(0);
+	const [data, setData] = useState<any>([]);
+	const [Count, setCount] = useState(3);
+	const [embedUrl, setEmbedUrl] = useState<any>('');
+	const [ViewModal, setViewModal] = useState<any>(false);
 
 	const token =
 		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -54,9 +66,17 @@ const ECommerce: React.FC = () => {
 			setCategoriesCount(category?.data?.data?.length);
 		}
 	};
+	const getFunc = async () => {
+		const resp = await apiRoot.get(`search/mostview`);
+		console.log(resp?.data, 'response');
 
+		if (resp?.status === 200) {
+			setData(resp?.data?.most_read);
+		}
+	};
 	useEffect(() => {
 		getStudents();
+		getFunc();
 	}, []);
 
 	return (
@@ -70,22 +90,11 @@ const ECommerce: React.FC = () => {
 				>
 					<FaBlackTie size={40} className='dark:text-mainColor' />
 				</CardDataStats>
-				<CardDataStats
-					title='Users'
-					total={studentsCount}
-					rate='4.35%'
-					levelUp
-				>
+				<CardDataStats title='Users' total={studentsCount} rate='4.35%' levelUp>
 					<PiStudentDuotone size={40} className='dark:text-mainColor' />
 				</CardDataStats>
-				<CardDataStats
-					title='Books'
-					total={coursesCount}
-					rate='2.59%'
-					levelUp
-				>
-	<FaBook size={40}  className='dark:text-mainColor' />
-
+				<CardDataStats title='Books' total={coursesCount} rate='2.59%' levelUp>
+					<FaBook size={40} className='dark:text-mainColor' />
 				</CardDataStats>
 				<CardDataStats
 					title='Categories '
@@ -110,8 +119,81 @@ const ECommerce: React.FC = () => {
 				</CardDataStats>
 			</div>
 
+			<div className='flex items-center  justify-center  gap-[30px] my-[15px] '>
+				<h3 className=' text-[22px] dark:text-white  font-bold text-black  '>
+				Most viewed books
+				</h3>
+
+			</div>
+
+
+			<div className='grid lg:grid-cols-3 max-lg:grid-cols-2  max-sm:grid-cols-1  gap-3 '>
+				{data?.length ? (
+					data?.slice(0,Count)?.map((item: any) => (
+						<div
+							key={item?.id}
+							className='flex flex-col relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4 max-lg:w-[90%] max-sm:w-[100%] w-[100%] max-lg:m-auto'
+						>
+							<Image
+								className='h-[280px]  w-full object-cover rounded-lg transition ease-in-out hover:opacity-75'
+								src={`${baseMediaUrl}/images/${item?.book_image}`}
+								alt='Picture of the book'
+								width={1000}
+								height={1000}
+							/>
+							<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
+								{item?.book_title}
+							</h6>
+
+							<h6 className='pt-[10px] text-[16px] font-bold text-black dark:text-white'>
+								{item?.book_description?.length > 45
+									? item?.book_description?.slice(0, 42) + '..'
+									: item?.book_description}
+							</h6>
+
+							<div className='flex justify-between items-center my-2'>
+								{item?.book_audio && (
+									<audio
+										controls
+										// onPlay={() => checkView(item?.id)}
+										src={`${baseMediaUrl}audios/${item?.book_audio}`}
+										className=' mb-3 border-[2px]  h-[34px] border-dotted rounded-full border-mainColor '
+									>
+										Your browser does not support the
+										<code>audio</code> element.
+									</audio>
+								)}
+							</div>
+
+						
+						
+							<hr className='h-1 w-full bg-CoursesHr' />
+							<div className='flex justify-between items-center pt-5'>
+								<div className='flex gap-[10px] items-center text-[15px] text-black dark:text-white'>
+								<FaPencil size={16} />
+
+									{item?.date_written?.slice(0, 10)}
+								</div>
+								<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
+									<IoMdEye size={20} />
+									{item?.number_view}
+								</span>
+							</div>
+						</div>
+					))
+				) : (
+					<SkeletonDemo />
+				)}
+			</div>
+{
+	data?.length > 3 ? (<button
+		className='bg-teal-500 hover:bg-teal-700 mx-auto block my-3 text-white font-bold py-2 px-5 rounded'
+		onClick={() => setCount(Count + 3)}
+	>
+		More
+	</button>) :""
+}
 			
-			{/* <Chart/> */}
 		</>
 	);
 };

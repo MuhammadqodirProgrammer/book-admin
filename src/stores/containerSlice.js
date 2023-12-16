@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
 
 const countainerSlice = createSlice({
   name: 'my_container',
-  initialState:test  || true,
+  initialState:test  || false,
   reducers: {
     containerState:(state)=> !state,
   },

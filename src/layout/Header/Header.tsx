@@ -53,7 +53,7 @@ const Header = () => {
 	const [SettingsBar, setSettingsBar] = useState(false);
 	const [active, setActive] = useState(true);
 	const [display, setDisplay] = useState<string>();
-	const [theme, setThemeState] = useState('light');
+	const [theme, setThemeState] = useState('dark');
 	const router = useRouter();
 
 	const toggleTheme = () => {

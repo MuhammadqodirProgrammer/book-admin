@@ -29,3 +29,15 @@ export function SingleSkeleton() {
     </div>
   );
 }
+
+export function CommnetSkeleton() {
+  return (
+    <div className="  relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4  w-[100%] max-lg:m-auto ">
+        <div className=" my-5 w-[100%]   ">
+          <Skeleton className=" mt-2 h-4 w-[25%]" />
+          <Skeleton className=" mt-4 h-6 w-[75%]" />
+          <Skeleton className=" mt-4 h-6 w-[75%]" />
+        </div>
+    </div>
+  );
+}
