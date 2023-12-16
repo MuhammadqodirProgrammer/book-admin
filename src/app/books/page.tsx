@@ -275,13 +275,6 @@ console.log(resp ,"check resp");
 		}
 	};
 
-	// setInterval(()=>{
-		
-	// 	console.log(cookies.get('mykey') ,"cookies.get('mykey')");
-		
-	// },1000)
-
-	// console.log(cookies.get('mykey'), 'cookies');
 
 	useEffect(() => {
 		getFunc();

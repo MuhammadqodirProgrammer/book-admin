@@ -654,7 +654,7 @@ const Header = () => {
 												}}
 											>
 												{' '}
-												Inverted
+												Vibrant
 											</p>
 										</div>
 									</div>
