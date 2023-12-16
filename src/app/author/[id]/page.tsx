@@ -195,7 +195,7 @@ export default function Page() {
 								<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
 									{item?.book_title}
 								</h6>
-								<h6 className='pt-[10px] text-[16px] font-bold text-black dark:text-white'>
+								<h6 className='pt-[10px] text-[16px] font-bold text-black dark:text-white mb-2'>
 									
 									{item?.book_description?.length > 45 ? item?.book_description?.slice(0, 43 ) +".." :item?.book_description}
 								</h6>
