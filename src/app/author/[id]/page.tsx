@@ -204,24 +204,14 @@ export default function Page() {
 										<IoMdEye size={20} />
 										{item?.number_view}
 									</span>
-									<div className=' flex items-center gap-2 right-[10px] '>
-										<RiDeleteBin5Fill
-											size={25}
-											onClick={() => {}}
-											className=' text-red-600 hover:text-red-700  cursor-pointer h-[30px] '
-										/>
-										<FaEdit
-											size={25}
-											className=' text-yellow-400 hover:text-yellow-500 cursor-pointer h-[30px] '
-										/>
-									</div>
+								
 								</div>
 								<div className='flex justify-between items-center'>
 							{
 								item?.book_audion && <audio
 								controls
 								src={`${baseMediaUrl}audios/${item?.book_audio}`}
-								className=" mb-3 "
+								className=' mb-3 border-[2px]  h-[40px] border-dotted rounded-full border-mainColor '
 							>
 								Your browser does not support the
 								<code>audio</code> element.
