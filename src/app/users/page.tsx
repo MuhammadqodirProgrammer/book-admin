@@ -15,6 +15,7 @@ import { Modal } from '@/components/Modal/Modal';
 import { uploadFile, uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
 import { Pagination } from '@/components/Pagination/Pagination';
+import { useRouter } from 'next/navigation'; // Import from 'next/router' instead of 'next/navigation'
 
 export default function Page() {
 	const [data, setData] = useState<any>([]);
@@ -44,9 +45,37 @@ export default function Page() {
 	const editbirthdayRef = useRef<any>();
 	const editstateRef = useRef<any>();
 	const editpasRef = useRef<any>();
+	
+	const router = useRouter();
 	const token =
-		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
+	useEffect(() => {
+		if(!token){
+			router.push("/login")
+		}else{
+
+			(async () =>{
+				const data = {
+					token,
+				};
+	
+				const resp = await apiRoot.post('check/token', data, {
+					headers: {
+						Authorization: `${token}`,
+						'Content-Type': 'application/json',
+					},
+				});
+				console.log(resp ,"resp kffkjfj");
+				if (!(resp?.data?.message === 'Token not expired') ) {
+					router.push("/login")
+					toast.error(resp?.data?.message);
+					localStorage.removeItem('token');
+				}
+			})()
+		}
+		
+	}, []);
 	const createImg = async (file: any) => {
 		const url = await uploadImage(file);
 		console.log(url, 'urlllllllllllllllllllllllllllllll');

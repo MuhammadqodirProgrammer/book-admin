@@ -14,6 +14,7 @@ import { Modal } from '@/components/Modal/Modal';
 import { uploadFile, uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaUserSecret } from "react-icons/fa";
+import { useRouter } from 'next/navigation'; // Import from 'next/router' instead of 'next/navigation'
 import { RiAdminFill } from "react-icons/ri";
 export default function Page() {
 	const [data, setData] = useState<any>([]);
@@ -36,9 +37,37 @@ export default function Page() {
 	const editnameRef = useRef<any>();
 	const editemailRef = useRef<any>();
 	const editpasswordRef = useRef<any>();
+		
+	const router = useRouter();
 	const token =
-		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
+	useEffect(() => {
+		if(!token){
+			router.push("/login")
+		}else{
+
+			(async () =>{
+				const data = {
+					token,
+				};
+	
+				const resp = await apiRoot.post('check/token', data, {
+					headers: {
+						Authorization: `${token}`,
+						'Content-Type': 'application/json',
+					},
+				});
+				console.log(resp ,"resp kffkjfj");
+				if (!(resp?.data?.message === 'Token not expired') ) {
+					router.push("/login")
+					toast.error(resp?.data?.message);
+					localStorage.removeItem('token');
+				}
+			})()
+		}
+		
+	}, []);
 	
 	const getFunc = async () => {
 		const resp = await apiRoot.get(`admins` ,{

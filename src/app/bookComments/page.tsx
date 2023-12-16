@@ -4,12 +4,44 @@ import { apiRoot } from '../api/api';
 import { FaBook } from 'react-icons/fa';
 import { FaUserTie } from "react-icons/fa";
 import { CommnetSkeleton } from '@/components/Skeleton/Skeleton';
+import { useRouter } from 'next/navigation'; // Import from 'next/router' instead of 'next/navigation'
+import { ToastContainer, toast } from 'react-toastify';
+
 export default function Page() {
 	const [data, setData] = useState<any>([]);
 	const [Count, setCount] = useState(6);
 
+	
+	const router = useRouter();
 	const token =
-		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+	useEffect(() => {
+		if(!token){
+			router.push("/login")
+		}else{
+
+			(async () =>{
+				const data = {
+					token,
+				};
+	
+				const resp = await apiRoot.post('check/token', data, {
+					headers: {
+						Authorization: `${token}`,
+						'Content-Type': 'application/json',
+					},
+				});
+				console.log(resp ,"resp kffkjfj");
+				if (!(resp?.data?.message === 'Token not expired') ) {
+					router.push("/login")
+					toast.error(resp?.data?.message);
+					localStorage.removeItem('token');
+				}
+			})()
+		}
+		
+	}, []);
 	const getFunc = async () => {
 		const resp = await apiRoot.get(`comment`, {
 			headers: {

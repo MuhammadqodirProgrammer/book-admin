@@ -1,7 +1,7 @@
 'use client';
 import { useRef, useState } from 'react';
 import instance, { apiRoot } from '../api/api';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import logo from '../../../public/images/logo2.png';
 import hand from '../../../public/images/hand.png';
@@ -13,7 +13,8 @@ import Cookies from 'universal-cookie';
 
 const cookies = new Cookies();
 export default function Page() {
-	const router = useRouter();
+
+const router = useRouter();
 	const [error, seterror] = useState<boolean>(false);
 
 	const loginNotify = () => toast.success('Successfully Logined');

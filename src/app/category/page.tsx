@@ -11,6 +11,7 @@ import { TbCategoryFilled } from "react-icons/tb";
 import { Modal } from '@/components/Modal/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import { Pagination } from '@/components/Pagination/Pagination';
+import { useRouter } from 'next/navigation'; // Import from 'next/router' instead of 'next/navigation'
 
 export default function Page() {
 	const [data, setData] = useState<any>([]);
@@ -27,9 +28,37 @@ export default function Page() {
 	// Refs
 	const nameRef = useRef<any>();
 	const editnameRef = useRef<any>();
+	
+	const router = useRouter();
 	const token =
-		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
+	useEffect(() => {
+		if(!token){
+			router.push("/login")
+		}else{
+
+			(async () =>{
+				const data = {
+					token,
+				};
+	
+				const resp = await apiRoot.post('check/token', data, {
+					headers: {
+						Authorization: `${token}`,
+						'Content-Type': 'application/json',
+					},
+				});
+				console.log(resp ,"resp kffkjfj");
+				if (!(resp?.data?.message === 'Token not expired') ) {
+					router.push("/login")
+					toast.error(resp?.data?.message);
+					localStorage.removeItem('token');
+				}
+			})()
+		}
+		
+	}, []);
 	const getFunc = async () => {
 		const resp = await apiRoot.get(`category?page=${activePage}&pageSize=9`);
 

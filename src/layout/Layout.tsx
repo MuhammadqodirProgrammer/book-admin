@@ -7,11 +7,42 @@ import { useRouter } from 'next/navigation'; // Import from 'next/router' instea
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 import { apiRoot } from '@/app/api/api';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const cookies = new Cookies();
 export default function Layout({ children }: any) {
+	
 	const router = useRouter();
+	const token =
+	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+	useEffect(() => {
+		if(!token){
+			router.push("/login")
+		}else{
+
+			(async () =>{
+				const data = {
+					token,
+				};
+	
+				const resp = await apiRoot.post('check/token', data, {
+					headers: {
+						Authorization: `${token}`,
+						'Content-Type': 'application/json',
+					},
+				});
+				console.log(resp ,"resp kffkjfj");
+				if (!(resp?.data?.message === 'Token not expired') ) {
+					router.push("/login")
+					toast.error(resp?.data?.message);
+					localStorage.removeItem('token');
+				}
+			})()
+		}
+		
+	}, []);
 
 	const isOpenMenu = useSelector((state: any) => state.isOpenMenu);
 	const positionNav: any = useSelector((state: any) => state.positionNav);
@@ -45,11 +76,12 @@ export default function Layout({ children }: any) {
 				}
 			}
 			console.log(key, "my key");
-	
-			
 		};
 		getKey()
 	}, []);
+
+	
+
 	return (
 		<>
 			<div className={` ${isContainerSt ? 'my_small_container' : ''} `}>

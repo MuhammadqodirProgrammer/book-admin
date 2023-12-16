@@ -20,6 +20,8 @@ import {
 	uploadFile,
 	uploadImage,
 } from '@/components/Upload/Upload';
+import { useRouter } from 'next/navigation'; // Import from 'next/router' instead of 'next/navigation'
+
 import { ToastContainer, toast } from 'react-toastify';
 import { Pagination } from '@/components/Pagination/Pagination';
 import Cookies from 'universal-cookie';
@@ -71,8 +73,37 @@ export default function Page() {
 	const editauthor_idRef = useRef<any>();
 	const editsubcategory_idRef = useRef<any>();
 
+	
+	const router = useRouter();
 	const token =
-		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+	typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+	useEffect(() => {
+		if(!token){
+			router.push("/login")
+		}else{
+
+			(async () =>{
+				const data = {
+					token,
+				};
+	
+				const resp = await apiRoot.post('check/token', data, {
+					headers: {
+						Authorization: `${token}`,
+						'Content-Type': 'application/json',
+					},
+				});
+				console.log(resp ,"resp kffkjfj");
+				if (!(resp?.data?.message === 'Token not expired') ) {
+					router.push("/login")
+					toast.error(resp?.data?.message);
+					localStorage.removeItem('token');
+				}
+			})()
+		}
+		
+	}, []);
 	const getSelectData = async () => {
 		const author = await apiRoot.get(`author?page=${1}&pageSize=50`);
 		const category = await apiRoot.get(`category?page=${1}&pageSize=90`);
