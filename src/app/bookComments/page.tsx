@@ -66,7 +66,7 @@ export default function Page() {
       </div>
 			)}
 {
-  data?.length > 6 ?(<button
+  data?.length > 6 && Count < data?.length ?(<button
     className='bg-teal-500 hover:bg-teal-700 mx-auto block my-3 text-white font-bold py-2 px-5 rounded'
     onClick={() => setCount(Count + 4)}
   >
