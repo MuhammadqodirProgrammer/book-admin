@@ -199,13 +199,7 @@ export default function Page() {
 									
 									{item?.book_description?.length > 45 ? item?.book_description?.slice(0, 43 ) +".." :item?.book_description}
 								</h6>
-								<div className='flex justify-between items-center  py-[15px]'>
-									<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
-										<IoMdEye size={20} />
-										{item?.number_view}
-									</span>
-								
-								</div>
+							
 								<div className='flex justify-between items-center'>
 							{
 								item?.book_audion && <audio
@@ -226,6 +220,10 @@ export default function Page() {
 										<p>Created:</p>
 										{item?.createdAt?.slice(0, 10)}
 									</div>
+									<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
+										<IoMdEye size={20} />
+										{item?.number_view}
+									</span>
 								</div>
 							</div>
 					  ))
