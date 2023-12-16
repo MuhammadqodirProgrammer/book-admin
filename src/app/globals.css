@@ -56,7 +56,7 @@
 
 .postion_st {
   position: fixed;
-  right: 0px ;
+  right: -57px ;
   top: 50%;
   transform: translate(-50%, -50%) !important;
   transform: rotate(-0.25turn) !important;
@@ -65,7 +65,7 @@
 
 .postion_st_left {
   position: fixed;
-  left: 20px !important;
+  left: -55px !important;
   top: 50%;
   transform: translate(-50%, -50%) ;
 
