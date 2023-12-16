@@ -428,7 +428,7 @@ export default function Page() {
 						className='flex flex-col items-center gap-3 justify-center'
 						onSubmit={editFunc}
 					>
-						<label
+						{/* <label
 							htmlFor='dropzone-file-edit'
 							className=' relative flex flex-col items-center justify-center w-full h-[95px] md:h-[165px] border-2 border-gray-500 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600'
 						>
@@ -540,12 +540,16 @@ export default function Page() {
 							type='email'
 							ref={editstateRef}
 							defaultValue={OneData?.email}
-						/>
+						/> */}
+						<h2 className='mb-2 text-[18px] text-gray-500 dark:text-gray-400'>
+							Hozircha admin userlarni edit qilolmaydi☹
+						</h2>
 
 						<div className='flex gap-x-2'>
 							<button
 								className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
 								type='submit'
+								disabled
 							>
 								Add
 							</button>
