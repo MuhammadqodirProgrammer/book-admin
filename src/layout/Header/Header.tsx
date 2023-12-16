@@ -517,7 +517,7 @@ const Header = () => {
 							: 'settings_offcanvas_left'
 					}    `}
 				>
-					<div className='h-[10vh] flex items-center  px-3 py-1 justify-between dark:bg-[#171923] bg-[#6071d6] '>
+					<div className={`h-[10vh] flex items-center  px-3 py-1 justify-between bg-gradient-to-r from-slate-800 to-blue-900 `}>
 						<div>
 							<div className='flex items-center gap-x-3'>
 								<IoColorPaletteSharp size={22} />
