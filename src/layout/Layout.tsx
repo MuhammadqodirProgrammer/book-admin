@@ -33,14 +33,14 @@ export default function Layout({ children }: any) {
 	}, []);
 	useEffect(() => {
 		const getKey = async () => {
-			const key =cookies.get("mykey") 
+			const key =cookies.get("browser_id") 
 			// const isKey =localStorage.getItem("isKey")
 			if(!key){
 				const resp = await apiRoot.get(`check/key`);
 				console.log(resp, 'response');
 				if(resp?.status ==201){
 					// localStorage.setItem("isKey" ,resp?.data?.key)
-					cookies.set("mykey" ,resp?.data?.key ,{ maxAge: 365 * 24 * 60 * 60 * 1000 } )
+					cookies.set("browser_id" ,resp?.data?.key ,{ maxAge: 365 * 24 * 60 * 60 * 1000 } )
 					// res.cookie('mykey', myKey, { maxAge: 365 * 24 * 60 * 60 * 1000 });
 				}
 			}

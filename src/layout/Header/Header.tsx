@@ -12,6 +12,7 @@ import { PiStudentDuotone } from 'react-icons/pi';
 import { FaBlackTie } from 'react-icons/fa';
 import { RiMovie2Line, RiSoundModuleFill } from 'react-icons/ri';
 import { LiaCommentDotsSolid } from 'react-icons/lia';
+import { RiAdminFill } from "react-icons/ri";
 import { FaBook } from 'react-icons/fa';
 import DashImg from '../../../public/icons/dashboard.svg';
 import { AiFillStar } from 'react-icons/ai';
@@ -28,6 +29,9 @@ import { PiArrowsHorizontalBold } from 'react-icons/pi';
 import { RiMenu3Fill } from 'react-icons/ri';
 import { CgLogOut } from 'react-icons/cg';
 import { BiCategory } from 'react-icons/bi';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import { menuState } from '../../stores/counterSlice';
@@ -48,6 +52,8 @@ const Header = () => {
 	const containerSt: any = useSelector((state: any) => state.containerSt);
 	const navSt: any = useSelector((state: any) => state.navSt);
 	const dispatch = useDispatch();
+	const role =cookies.get('role');
+	console.log(role , "role");
 
 	const pathname = usePathname();
 	const { setTheme } = useTheme();
@@ -389,6 +395,23 @@ const Header = () => {
 									</div>
 								</button>
 							</Link>
+							{
+						role =="superAdmin" && <Link className='nav_link' href='/admins'>
+						<button
+							type='button'
+							className={
+								pathname == '/admins'
+									? 'active_link nav_link-button'
+									: 'nav_link-button'
+							}
+						>
+							<div className='flex items-center gap-x-2 justify-start'>
+								<RiAdminFill size={20} />
+								 <p className='css-0'>Admins</p>
+							</div>
+						</button>
+					</Link>
+					}
 							<Link className='nav_link' href='/author'>
 								<button
 									type='button'
@@ -400,20 +423,7 @@ const Header = () => {
 									onClick={toggleOffcanvas}
 								>
 									<div className='flex items-center gap-x-2 justify-start'>
-										{/* <svg
-									stroke='currentColor'
-									fill='currentColor'
-									strokeWidth={0}
-									viewBox='0 0 24 24'
-									focusable='false'
-									className='nav_link_icon'
-									height='1em'
-									width='1em'
-									xmlns='http://www.w3.org/2000/svg'
-								>
-									<path fill='none' d='M0 0h24v24H0z' />
-									<path d='M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-2-6H6v-2h12v2zm-4 4H6v-2h8v2z' />
-								</svg> */}
+										
 										<FaBlackTie size={20} />
 										<p className='chakra-text css-0'>Author</p>
 									</div>

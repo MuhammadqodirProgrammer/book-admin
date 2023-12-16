@@ -260,11 +260,11 @@ export default function Page() {
 
 	const checkView = async (book_id: any) => {
 
-		const key =cookies.get("myKey") 
+		const key =cookies.get("browser_id") 
 		try {
 			const resp: any = await apiRoot.get(`check/view/${book_id}`, {
 				headers:{
-					"mykey":key
+					"browser_id":key
 				}
 			});
 console.log(key ,"key resp");

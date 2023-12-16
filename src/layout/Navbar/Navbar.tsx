@@ -8,6 +8,7 @@ import { FaBlackTie } from 'react-icons/fa';
 import { RiMovie2Line, RiSoundModuleFill } from 'react-icons/ri';
 import { LiaCommentDotsSolid } from 'react-icons/lia';
 import DashImg from '../../../public/icons/dashboard.svg';
+import { RiAdminFill } from "react-icons/ri";
 import { AiFillStar } from 'react-icons/ai';
 import Image from 'next/image';
 import { CgLogOut } from 'react-icons/cg';
@@ -16,7 +17,9 @@ import { useRouter } from 'next/navigation';
 import { BiCategory } from "react-icons/bi";
 // redux
 import { useSelector } from 'react-redux';
+import Cookies from 'universal-cookie';
 
+const cookies = new Cookies();
 function Navbar() {
 	const pathname = usePathname();
 	const router = useRouter();
@@ -27,6 +30,10 @@ function Navbar() {
 	let iscontainerSt = /true/.test(containerSt);
 	const navSt: any = useSelector((state: any) => state.navSt);
 	let isNavSt = /true/.test(navSt);
+
+	const role =cookies.get('role');
+	console.log(role , "role");
+	
 	
 	return (
 		<>
@@ -38,6 +45,8 @@ function Navbar() {
 				} `}
 			>
 				<div className='navbar_box text-black dark:text-mainColor '>
+
+					
 					<Link className='nav_link' href='/'>
 						<button
 							type='button'
@@ -65,6 +74,23 @@ function Navbar() {
 							</div>
 						</button>
 					</Link>
+					{
+						role =="superAdmin" && <Link className='nav_link' href='/admins'>
+						<button
+							type='button'
+							className={
+								pathname == '/admins'
+									? 'active_link nav_link-button'
+									: 'nav_link-button'
+							}
+						>
+							<div className='flex items-center gap-x-2 justify-start'>
+								<RiAdminFill size={20} />
+								{isOpen && <p className='css-0'>Admins</p>}
+							</div>
+						</button>
+					</Link>
+					}
 					<Link className='nav_link' href='/author'>
 						<button
 							type='button'

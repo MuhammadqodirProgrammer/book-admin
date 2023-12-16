@@ -9,6 +9,9 @@ import eye from '../../../public/images/eye-invisible.png';
 import info from '../../../public/images/information.png';
 import dots from '../../../public/images/Caurusel.png';
 import Image from '../../../node_modules/next/image';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 export default function Page() {
 	const router = useRouter();
 	const [error, seterror] = useState<boolean>(false);
@@ -16,6 +19,7 @@ export default function Page() {
 	const loginNotify = () => toast.success('Successfully Logined');
 	const emailRef:any = useRef<HTMLInputElement>();
 	const pasRef:any = useRef<HTMLInputElement>();
+
 	const HendleSubmit = async (e: any) => {
 		e.preventDefault();
 		const email = emailRef.current?.value;
@@ -35,6 +39,8 @@ export default function Page() {
 			if (response?.status === 201) {
 				if (typeof window !== 'undefined') {
 				  let token = response?.data?.token;
+				  console.log(response?.data , "role");
+				cookies.set('role' , response?.data?.role);
 				  localStorage.setItem('token', token);
 			  
 				  loginNotify();
