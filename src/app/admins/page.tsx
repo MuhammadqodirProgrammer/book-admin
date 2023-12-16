@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-
+import AdminImg from "../../../public/images/admin.png"
 import { FaBirthdayCake } from 'react-icons/fa';
 import { FaBook } from 'react-icons/fa';
 import { FaArrowRight } from 'react-icons/fa6';
@@ -14,6 +14,7 @@ import { Modal } from '@/components/Modal/Modal';
 import { uploadFile, uploadImage } from '@/components/Upload/Upload';
 import { ToastContainer, toast } from 'react-toastify';
 import { FaUserSecret } from "react-icons/fa";
+import { RiAdminFill } from "react-icons/ri";
 export default function Page() {
 	const [data, setData] = useState<any>([]);
 	const [OneData, setOneData] = useState<any>([]);
@@ -156,13 +157,13 @@ console.log(req , "reqqqqqqqqqqqqq");
 	return (
 		<>
 			<div className='flex items-center  justify-center  gap-[30px] mb-[15px] '>
-				<h3 className=' text-[22px] dark:text-white text-black  '>Authors </h3>
+				<h3 className=' text-[22px] dark:text-white text-black  '>Admins </h3>
 
 				<button
 					className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
 					onClick={() => setCreate(true)}
 				>
-					Add Author
+					Add Admin
 				</button>
 			</div>
 
@@ -174,21 +175,23 @@ console.log(req , "reqqqqqqqqqqqqq");
 							className='flex flex-col relative dark:bg-famousCourcesBg bg-slate-300  text-black  dark:text-white shadow-[0_1px_3px_0_rgba(0, 0, 0, 0.1),_0_1px_2px_0_rgba(0, 0, 0, 0.06)] rounded-md  p-4 max-lg:w-[90%] max-sm:w-[100%] w-[100%] max-lg:m-auto'
 						>
 							<Image
-								className='h-[280px]  w-full object-cover rounded-lg transition ease-in-out hover:opacity-75'
-								src={`${baseMediaUrl}/images/${item?.author_image}`}
+								className='h-[280px]  w-full object-contain rounded-lg transition ease-in-out hover:opacity-75'
+								src={AdminImg}
 								alt='Picture of the author'
 								width={1000}
 								height={1000}
 							/>
+							
 							<h6 className='pt-[10px] text-[22px] font-bold text-black dark:text-white'>
 							{item?.full_name?.length > 25 ? item?.full_name?.slice(0, 23 ) +".." :item?.full_name}
 							</h6>
 							<h6 className='pt-[10px] text-[18px] font-bold text-black dark:text-white'>
 							{item?.email?.length > 25 ? item?.email?.slice(0, 23 ) +".." :item?.email}
 							</h6>
-							<div className='flex justify-between items-center'>
+							<div className='flex justify-between items-center mt-[10px]'>
 								<span className='flex gap-[5px] mb-3 items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
-									<FaUserSecret size={20} />
+									
+									{item?.role =="superAdmin" ?<FaUserSecret size={20} />:<RiAdminFill size={20} /> }
 									{item?.role}
 								</span>
 								<div className=' flex items-center gap-2 right-[10px] '>
