@@ -55,7 +55,7 @@ export default function Page() {
 	const stateRef = useRef<any>();
 	const book_titleRef = useRef<any>();
 	const book_descriptionRef = useRef<any>();
-	
+
 	const date_writtenRef = useRef<any>();
 	const category_idRef = useRef<any>();
 	const author_idRef = useRef<any>();
@@ -215,8 +215,8 @@ export default function Page() {
 			book_image: editImageUrl || OneData?.book_image,
 			book_audio: editAudioUrl || OneData?.book_audio,
 		};
-console.log(req ,"edit req ");
-console.log(editAudioUrl ,"editAudioUrl req ");
+		console.log(req, 'edit req ');
+		console.log(editAudioUrl, 'editAudioUrl req ');
 
 		const resp = await apiRoot
 			.patch(`books/${OneId}`, req, {
@@ -258,13 +258,18 @@ console.log(editAudioUrl ,"editAudioUrl req ");
 	}
 
 	const checkView = async (book_id: any) => {
-		const resp:any = await apiRoot.get(`check/view/${book_id}` ,{ withCredentials: true });
-		
-		if (
-			resp?.message == 'Increase the number of views of the book by 1' &&
-			resp?.status == 200
-		) {
-			getFunc();
+		try {
+			const resp: any = await apiRoot.get(`check/view/${book_id}`, {
+				withCredentials: true,
+			});
+
+			// Olingan javobdagi cookie ma'lumotlariga kirish
+			const cookiesFromResponse = resp.headers['set-cookie'];
+			console.log("Javobdagi cookie ma'lumotlari:", cookiesFromResponse);
+
+			// Boshqa amallar...
+		} catch (error) {
+			console.error('Tekshirishda xato:', error);
 		}
 	};
 
@@ -276,19 +281,17 @@ console.log(editAudioUrl ,"editAudioUrl req ");
 	// 		"Content-Type": "application/json",
 	// 	  },
 	// 	});
-	
+
 	// 	const data = await res.json();
-	
+
 	// 	console.log(data);
 	//   }
-console.log(cookies.get("mykey") ,"cookies");
+	console.log(cookies.get('mykey'), 'cookies');
 
 	useEffect(() => {
 		getFunc();
 	}, [activePage]);
 	useEffect(() => {
-	
-		
 		getSelectData();
 	}, []);
 
@@ -315,7 +318,7 @@ console.log(cookies.get("mykey") ,"cookies");
 							<Image
 								className='h-[280px]  w-full object-cover rounded-lg transition ease-in-out hover:opacity-75'
 								src={`${baseMediaUrl}/images/${item?.book_image}`}
-								alt='Picture of the author'
+								alt='Picture of the book'
 								width={1000}
 								height={1000}
 							/>
@@ -421,7 +424,7 @@ console.log(cookies.get("mykey") ,"cookies");
 
 			<Modal
 				width={'900px'}
-				title={'Create Author'}
+				title={'Create Book'}
 				modal={Create}
 				setModal={setCreate}
 			>
@@ -591,7 +594,7 @@ console.log(cookies.get("mykey") ,"cookies");
 
 			<Modal
 				width={'900px'}
-				title={'Create Author'}
+				title={'Edit Book'}
 				modal={EditModal}
 				setModal={setEditModal}
 			>
@@ -846,7 +849,7 @@ console.log(cookies.get("mykey") ,"cookies");
 
 			<FileModal
 				width={' w-[85%] md:w-[600px] '}
-				title={'Delete Author'}
+				title={'Delete Book'}
 				modal={ViewModal}
 				setModal={setViewModal}
 			>
