@@ -404,6 +404,7 @@ const Header = () => {
 									? 'active_link nav_link-button'
 									: 'nav_link-button'
 							}
+							onClick={toggleOffcanvas}
 						>
 							<div className='flex items-center gap-x-2 justify-start'>
 								<RiAdminFill size={20} />
