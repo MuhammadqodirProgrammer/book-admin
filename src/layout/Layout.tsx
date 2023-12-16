@@ -5,6 +5,11 @@ import FamousCourses from '@/components/FamousCourses/FamousCourses';
 import NewCourses from '@/components/NewCourses/NewCourses';
 import { useRouter } from 'next/navigation'; // Import from 'next/router' instead of 'next/navigation'
 import { useSelector, useDispatch } from 'react-redux';
+import Cookies from 'universal-cookie';
+import { apiRoot } from '@/app/api/api';
+
+
+const cookies = new Cookies();
 export default function Layout({ children }: any) {
 	const router = useRouter();
 
@@ -25,6 +30,25 @@ export default function Layout({ children }: any) {
 			router.push('/');
 		}
 		console.log(token, 'token ');
+	}, []);
+	useEffect(() => {
+		const getKey = async () => {
+			const key =cookies.get("mykey") 
+			// const isKey =localStorage.getItem("isKey")
+			if(!key){
+				const resp = await apiRoot.get(`check/key`);
+				console.log(resp, 'response');
+				if(resp?.status ==201){
+					// localStorage.setItem("isKey" ,resp?.data?.key)
+					cookies.set("mykey" ,resp?.data?.key ,{ maxAge: 365 * 24 * 60 * 60 * 1000 } )
+					// res.cookie('mykey', myKey, { maxAge: 365 * 24 * 60 * 60 * 1000 });
+				}
+			}
+			console.log(key, "my key");
+	
+			
+		};
+		getKey()
 	}, []);
 	return (
 		<>

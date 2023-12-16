@@ -23,6 +23,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import { Pagination } from '@/components/Pagination/Pagination';
 import Cookies from 'universal-cookie';
+import { setInterval } from 'timers';
 
 const cookies = new Cookies();
 export default function Page() {
@@ -258,35 +259,29 @@ export default function Page() {
 	}
 
 	const checkView = async (book_id: any) => {
+
+		const key =cookies.get("myKey") 
 		try {
 			const resp: any = await apiRoot.get(`check/view/${book_id}`, {
-				withCredentials: true,
+				headers:{
+					"mykey":key
+				}
 			});
+console.log(key ,"key resp");
+console.log(resp ,"check resp");
 
-			// Olingan javobdagi cookie ma'lumotlariga kirish
-			const cookiesFromResponse = resp.headers['set-cookie'];
-			console.log("Javobdagi cookie ma'lumotlari:", cookiesFromResponse);
-
-			// Boshqa amallar...
 		} catch (error) {
 			console.error('Tekshirishda xato:', error);
 		}
 	};
 
-	// const checkView = async (book_id: any) => {
-	// 	let res= await fetch(`${baseUrl}/check/view/${book_id}`, {
-	// 	  method: "GET",
-	// 	  credentials: "same-origin",
-	// 	  headers: {
-	// 		"Content-Type": "application/json",
-	// 	  },
-	// 	});
+	// setInterval(()=>{
+		
+	// 	console.log(cookies.get('mykey') ,"cookies.get('mykey')");
+		
+	// },1000)
 
-	// 	const data = await res.json();
-
-	// 	console.log(data);
-	//   }
-	console.log(cookies.get('mykey'), 'cookies');
+	// console.log(cookies.get('mykey'), 'cookies');
 
 	useEffect(() => {
 		getFunc();

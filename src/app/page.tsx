@@ -36,7 +36,7 @@ const ECommerce: React.FC = () => {
 		typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
 	const getStudents = async () => {
-		const res = await apiRoot.get(`author?page=1&pageSize=9`, {
+		const res = await apiRoot.get(`author?page=1&pageSize=6`, {
 			headers: {
 				Authorization: token,
 			},
@@ -74,7 +74,10 @@ const ECommerce: React.FC = () => {
 			setData(resp?.data?.most_read);
 		}
 	};
+
+
 	useEffect(() => {
+		
 		getStudents();
 		getFunc();
 	}, []);
@@ -186,7 +189,7 @@ const ECommerce: React.FC = () => {
 				)}
 			</div>
 {
-	data?.length > 3 ? (<button
+	data?.length > 3 && Count < data?.length ? (<button
 		className='bg-teal-500 hover:bg-teal-700 mx-auto block my-3 text-white font-bold py-2 px-5 rounded'
 		onClick={() => setCount(Count + 3)}
 	>

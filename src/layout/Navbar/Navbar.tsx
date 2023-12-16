@@ -25,10 +25,13 @@ function Navbar() {
 	let isOpen = /true/.test(isOpenMenu);
 	const containerSt: any = useSelector((state: any) => state.containerSt);
 	let iscontainerSt = /true/.test(containerSt);
+	const navSt: any = useSelector((state: any) => state.navSt);
+	let isNavSt = /true/.test(navSt);
+	
 	return (
 		<>
 			<nav
-				className={`navbar  shadow z-30 bg-[#fff] dark:bg-topColor hidden md:flex  ${
+				className={`navbar  shadow z-30  ${isNavSt ? "bg-[#fff] dark:bg-topColor":"bg-gradient-to-b from-slate-700 to-indigo-600"} hidden md:flex  ${
 					isOpen ? 'w-[300px]' : 'w-[80px]'
 				}  ${positionNav == 'right' ? 'right-0   ' : 'left-0 '}  ${
 					iscontainerSt ? 'navbar_absolute' : ''

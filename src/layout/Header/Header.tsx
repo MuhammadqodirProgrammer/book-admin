@@ -12,7 +12,7 @@ import { PiStudentDuotone } from 'react-icons/pi';
 import { FaBlackTie } from 'react-icons/fa';
 import { RiMovie2Line, RiSoundModuleFill } from 'react-icons/ri';
 import { LiaCommentDotsSolid } from 'react-icons/lia';
-import { FaBook } from "react-icons/fa";
+import { FaBook } from 'react-icons/fa';
 import DashImg from '../../../public/icons/dashboard.svg';
 import { AiFillStar } from 'react-icons/ai';
 import { useTheme } from 'next-themes';
@@ -27,7 +27,7 @@ import { LuArrowRightFromLine } from 'react-icons/lu';
 import { PiArrowsHorizontalBold } from 'react-icons/pi';
 import { RiMenu3Fill } from 'react-icons/ri';
 import { CgLogOut } from 'react-icons/cg';
-import { BiCategory } from "react-icons/bi";
+import { BiCategory } from 'react-icons/bi';
 // redux
 import { useSelector, useDispatch } from 'react-redux';
 import { menuState } from '../../stores/counterSlice';
@@ -41,10 +41,12 @@ import BarImg3 from '../../../public/images/inverted.png';
 import BarImg4 from '../../../public/images/vibrant.png';
 import { layoutState } from '@/stores/layoutSlice';
 import { containerState } from '@/stores/containerSlice';
+import { navState } from '@/stores/navSlice';
 const Header = () => {
 	const isOpenMenu: any = useSelector((state: any) => state.isOpenMenu);
 	const positionNav: any = useSelector((state: any) => state.positionNav);
 	const containerSt: any = useSelector((state: any) => state.containerSt);
+	const navSt: any = useSelector((state: any) => state.navSt);
 	const dispatch = useDispatch();
 
 	const pathname = usePathname();
@@ -91,6 +93,11 @@ const Header = () => {
 	useEffect(() => {
 		localStorage.setItem('my_container', containerSt);
 	}, [isContainerSt]);
+	let isnavSt = /true/.test(navSt);
+
+	useEffect(() => {
+		localStorage.setItem('navSt', navSt);
+	}, [isnavSt]);
 	useEffect(() => {
 		localStorage.setItem('positionNav', positionNav);
 	}, [positionNav]);
@@ -98,15 +105,17 @@ const Header = () => {
 		e.preventDefault();
 		console.log(e?.target?.classList?.toggle('img_label_border_active'));
 	};
-console.log(isContainerSt ,"isContainerSt header");
+	console.log(isnavSt, 'isnavSt header');
 
 	return (
 		<>
-			<header className=' px-3  header bg-[#fff] dark:bg-topColor text-black dark:text-white  fixed w-full z-40 top-0 left-0 flex items-center'>
+			<header className={` px-3  header ${isnavSt ? "bg-[#fff] dark:bg-topColor":"bg-gradient-to-r from-slate-700 to-indigo-600"} text-black dark:text-white  fixed w-full z-40 top-0 left-0 flex items-center`}>
 				<div
 					className={`flex    ${
 						positionNav == 'left' ? ' ' : 'flex-row-reverse'
-					} m-auto  justify-between w-[${fullScreen?.width}] items-center  ${isContainerSt ? "my_small_container":""}  `} 
+					} m-auto  justify-between w-[${fullScreen?.width}] items-center  ${
+						isContainerSt ? 'my_small_container' : ''
+					}  `}
 				>
 					<div
 						className={`flex  items-center gap-x-[30px] ${
@@ -135,8 +144,11 @@ console.log(isContainerSt ,"isContainerSt header");
 							href='/'
 							className='flex items-center font-semibold gap-2 sm:text-[24px]  text-[16px]'
 						>
-							<Image src={MyLogo}  alt='logo' className="  w-[auto] h-[60px]  " />
-							
+							<Image
+								src={MyLogo}
+								alt='logo'
+								className='  w-[auto] h-[60px]  '
+							/>
 						</Link>
 					</div>
 
@@ -210,7 +222,7 @@ console.log(isContainerSt ,"isContainerSt header");
 								<line x1='4.22' y1='19.78' x2='5.64' y2='18.36'></line>
 								<line x1='18.36' y1='5.64' x2='19.78' y2='4.22'></line>
 							</svg>
-						
+
 							<svg
 								className={!active ? '' : 'hidden'}
 								stroke='currentColor'
@@ -322,11 +334,9 @@ console.log(isContainerSt ,"isContainerSt header");
 			</div>
 
 			{isOffcanvasOpen && (
-				<nav className='navbar_offcanvas fixed top-0 left-0  h-screen  '>
-					<div className='h-[70px] flex items-center px-3 justify-between'>
-					
-
-						<Image src={MyLogo} alt="logo"  className=" h-[60px] w-[80%] " /> 
+				<nav className={`${isnavSt ? "bg-[#fff] dark:bg-topColor":"bg-gradient-to-b from-slate-700 to-indigo-600"} navbar_offcanvas fixed top-0 left-0  h-screen  `}>
+					<div className='h-[70px] flex items-center  px-3 justify-between'>
+						<Image src={MyLogo} alt='logo' className=' h-[60px] w-[80%] ' />
 						<button
 							onClick={toggleOffcanvas}
 							type='button'
@@ -349,49 +359,48 @@ console.log(isContainerSt ,"isContainerSt header");
 							</svg>
 						</button>
 					</div>
-					<div className=' bg-slate-100  dark:bg-slate-900 h-screen '>
-					<div className='navbar_box text-black dark:text-mainColor '>
-					<Link className='nav_link' href='/'>
-						<button
-							type='button'
-							className={
-								pathname == '/'
-									? 'active_link nav_link-button'
-									: 'nav_link-button'
-							}
-							onClick={toggleOffcanvas}
-						>
-							<div className='flex items-center gap-x-2 justify-start'>
-								<svg
-									stroke='currentColor'
-									fill='currentColor'
-									strokeWidth={0}
-									viewBox='0 0 1024 1024'
-									focusable='false'
-									className='nav_link_icon'
-									height='1em'
-									width='1em'
-									xmlns='http://www.w3.org/2000/svg'
+					<div className={`h-screen ${isnavSt ? "bg-[#fff] dark:bg-topColor":"bg-gradient-to-b from-slate-700 to-indigo-600"}`}>
+						<div className='navbar_box text-black dark:text-mainColor '>
+							<Link className='nav_link' href='/'>
+								<button
+									type='button'
+									className={
+										pathname == '/'
+											? 'active_link nav_link-button'
+											: 'nav_link-button'
+									}
+									onClick={toggleOffcanvas}
 								>
-									<path d='M924.8 385.6a446.7 446.7 0 0 0-96-142.4 446.7 446.7 0 0 0-142.4-96C631.1 123.8 572.5 112 512 112s-119.1 11.8-174.4 35.2a446.7 446.7 0 0 0-142.4 96 446.7 446.7 0 0 0-96 142.4C75.8 440.9 64 499.5 64 560c0 132.7 58.3 257.7 159.9 343.1l1.7 1.4c5.8 4.8 13.1 7.5 20.6 7.5h531.7c7.5 0 14.8-2.7 20.6-7.5l1.7-1.4C901.7 817.7 960 692.7 960 560c0-60.5-11.9-119.1-35.2-174.4zM761.4 836H262.6A371.12 371.12 0 0 1 140 560c0-99.4 38.7-192.8 109-263 70.3-70.3 163.7-109 263-109 99.4 0 192.8 38.7 263 109 70.3 70.3 109 163.7 109 263 0 105.6-44.5 205.5-122.6 276zM623.5 421.5a8.03 8.03 0 0 0-11.3 0L527.7 506c-18.7-5-39.4-.2-54.1 14.5a55.95 55.95 0 0 0 0 79.2 55.95 55.95 0 0 0 79.2 0 55.87 55.87 0 0 0 14.5-54.1l84.5-84.5c3.1-3.1 3.1-8.2 0-11.3l-28.3-28.3zM490 320h44c4.4 0 8-3.6 8-8v-80c0-4.4-3.6-8-8-8h-44c-4.4 0-8 3.6-8 8v80c0 4.4 3.6 8 8 8zm260 218v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8zm12.7-197.2l-31.1-31.1a8.03 8.03 0 0 0-11.3 0l-56.6 56.6a8.03 8.03 0 0 0 0 11.3l31.1 31.1c3.1 3.1 8.2 3.1 11.3 0l56.6-56.6c3.1-3.1 3.1-8.2 0-11.3zm-458.6-31.1a8.03 8.03 0 0 0-11.3 0l-31.1 31.1a8.03 8.03 0 0 0 0 11.3l56.6 56.6c3.1 3.1 8.2 3.1 11.3 0l31.1-31.1c3.1-3.1 3.1-8.2 0-11.3l-56.6-56.6zM262 530h-80c-4.4 0-8 3.6-8 8v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8z' />
-								</svg>
-								 <p className='css-0'>Dashboard</p>
-							</div>
-						</button>
-					</Link>
-					<Link className='nav_link' href='/author'>
-						<button
-							type='button'
-							className={
-								pathname == '/author'
-									? 'active_link nav_link-button'
-									: 'nav_link-button'
-							}
-							onClick={toggleOffcanvas}
-
-						>
-							<div className='flex items-center gap-x-2 justify-start'>
-								{/* <svg
+									<div className='flex items-center gap-x-2 justify-start'>
+										<svg
+											stroke='currentColor'
+											fill='currentColor'
+											strokeWidth={0}
+											viewBox='0 0 1024 1024'
+											focusable='false'
+											className='nav_link_icon'
+											height='1em'
+											width='1em'
+											xmlns='http://www.w3.org/2000/svg'
+										>
+											<path d='M924.8 385.6a446.7 446.7 0 0 0-96-142.4 446.7 446.7 0 0 0-142.4-96C631.1 123.8 572.5 112 512 112s-119.1 11.8-174.4 35.2a446.7 446.7 0 0 0-142.4 96 446.7 446.7 0 0 0-96 142.4C75.8 440.9 64 499.5 64 560c0 132.7 58.3 257.7 159.9 343.1l1.7 1.4c5.8 4.8 13.1 7.5 20.6 7.5h531.7c7.5 0 14.8-2.7 20.6-7.5l1.7-1.4C901.7 817.7 960 692.7 960 560c0-60.5-11.9-119.1-35.2-174.4zM761.4 836H262.6A371.12 371.12 0 0 1 140 560c0-99.4 38.7-192.8 109-263 70.3-70.3 163.7-109 263-109 99.4 0 192.8 38.7 263 109 70.3 70.3 109 163.7 109 263 0 105.6-44.5 205.5-122.6 276zM623.5 421.5a8.03 8.03 0 0 0-11.3 0L527.7 506c-18.7-5-39.4-.2-54.1 14.5a55.95 55.95 0 0 0 0 79.2 55.95 55.95 0 0 0 79.2 0 55.87 55.87 0 0 0 14.5-54.1l84.5-84.5c3.1-3.1 3.1-8.2 0-11.3l-28.3-28.3zM490 320h44c4.4 0 8-3.6 8-8v-80c0-4.4-3.6-8-8-8h-44c-4.4 0-8 3.6-8 8v80c0 4.4 3.6 8 8 8zm260 218v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8zm12.7-197.2l-31.1-31.1a8.03 8.03 0 0 0-11.3 0l-56.6 56.6a8.03 8.03 0 0 0 0 11.3l31.1 31.1c3.1 3.1 8.2 3.1 11.3 0l56.6-56.6c3.1-3.1 3.1-8.2 0-11.3zm-458.6-31.1a8.03 8.03 0 0 0-11.3 0l-31.1 31.1a8.03 8.03 0 0 0 0 11.3l56.6 56.6c3.1 3.1 8.2 3.1 11.3 0l31.1-31.1c3.1-3.1 3.1-8.2 0-11.3l-56.6-56.6zM262 530h-80c-4.4 0-8 3.6-8 8v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8z' />
+										</svg>
+										<p className='css-0'>Dashboard</p>
+									</div>
+								</button>
+							</Link>
+							<Link className='nav_link' href='/author'>
+								<button
+									type='button'
+									className={
+										pathname == '/author'
+											? 'active_link nav_link-button'
+											: 'nav_link-button'
+									}
+									onClick={toggleOffcanvas}
+								>
+									<div className='flex items-center gap-x-2 justify-start'>
+										{/* <svg
 									stroke='currentColor'
 									fill='currentColor'
 									strokeWidth={0}
@@ -405,102 +414,97 @@ console.log(isContainerSt ,"isContainerSt header");
 									<path fill='none' d='M0 0h24v24H0z' />
 									<path d='M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-2-6H6v-2h12v2zm-4 4H6v-2h8v2z' />
 								</svg> */}
-								<FaBlackTie size={20}/>
-								 <p className='chakra-text css-0'>Author</p>
-							</div>
-						</button>
-					</Link>
-					<Link className='nav_link' href='/users'>
-						<button
-							type='button'
-							className={
-								pathname == '/users'
-									? 'active_link nav_link-button'
-									: 'nav_link-button'
-							}
-							onClick={toggleOffcanvas}
+										<FaBlackTie size={20} />
+										<p className='chakra-text css-0'>Author</p>
+									</div>
+								</button>
+							</Link>
+							<Link className='nav_link' href='/users'>
+								<button
+									type='button'
+									className={
+										pathname == '/users'
+											? 'active_link nav_link-button'
+											: 'nav_link-button'
+									}
+									onClick={toggleOffcanvas}
+								>
+									<div className='flex items-center gap-x-2 justify-start'>
+										<PiStudentDuotone size={20} />
+										<p className='chakra-text css-0'>Users</p>
+									</div>
+								</button>
+							</Link>
+							<Link className='nav_link' href='/category'>
+								<button
+									type='button'
+									className={
+										pathname == '/category'
+											? 'active_link nav_link-button'
+											: 'nav_link-button'
+									}
+									onClick={toggleOffcanvas}
+								>
+									<div className='flex items-center gap-x-2 justify-start'>
+										<BiCategory size={20} />
+										<p className='chakra-text css-0'>Category</p>
+									</div>
+								</button>
+							</Link>
+							<Link className='nav_link' href='/books'>
+								<button
+									type='button'
+									className={
+										pathname == '/books'
+											? 'active_link nav_link-button'
+											: 'nav_link-button'
+									}
+									onClick={toggleOffcanvas}
+								>
+									<div className='flex items-center gap-x-2 justify-start'>
+										<FaBook size={20} />
+										<p className='chakra-text css-0'>Books</p>
+									</div>
+								</button>
+							</Link>
 
-						>
-							<div className='flex items-center gap-x-2 justify-start'>
-								<PiStudentDuotone size={20} />
-								 <p className='chakra-text css-0'>Users</p>
+							<Link className='nav_link' href='/bookComments'>
+								<button
+									type='button'
+									className={
+										pathname == '/bookComments'
+											? 'active_link nav_link-button'
+											: 'nav_link-button'
+									}
+									onClick={toggleOffcanvas}
+								>
+									<div className='flex items-center gap-x-2 justify-start'>
+										<LiaCommentDotsSolid size={20} />
+										<p className='chakra-text css-0'>Books Comments</p>
+									</div>
+								</button>
+							</Link>
+							<div className='nav_link'>
+								<button
+									type='button'
+									className={
+										pathname == '/requirement'
+											? 'active_link nav_link-button'
+											: 'nav_link-button'
+									}
+									onClick={() => {
+										router.push('/login');
+										localStorage.removeItem('token');
+										toggleOffcanvas();
+									}}
+								>
+									<div className='flex items-center gap-x-2 justify-start'>
+										<CgLogOut />
+										<p className='chakra-text css-0'>LogOut</p>
+									</div>
+								</button>
 							</div>
-						</button>
-					</Link>
-					<Link className='nav_link' href='/category'>
-						<button
-							type='button'
-							className={
-								pathname == '/category'
-									? 'active_link nav_link-button'
-									: 'nav_link-button'
-							}
-							onClick={toggleOffcanvas}
-						>
-							<div className='flex items-center gap-x-2 justify-start'>
-							<BiCategory size={20}/>
-								 <p className='chakra-text css-0'>Category</p>
-							</div>
-						</button>
-					</Link>
-					<Link className='nav_link' href='/books'>
-						<button
-							type='button'
-							className={
-								pathname == '/books'
-									? 'active_link nav_link-button'
-									: 'nav_link-button'
-							}
-							onClick={toggleOffcanvas}
-
-						>
-							<div className='flex items-center gap-x-2 justify-start'>
-								<FaBook size={20} />
-								<p className='chakra-text css-0'>Books</p>
-							</div>
-						</button>
-					</Link>
-
-					<Link className='nav_link' href='/bookComments'>
-						<button
-							type='button'
-							className={
-								pathname == '/bookComments'
-									? 'active_link nav_link-button'
-									: 'nav_link-button'
-							}
-							onClick={toggleOffcanvas}
-
-						>
-							<div className='flex items-center gap-x-2 justify-start'>
-								<LiaCommentDotsSolid size={20} />
-							 <p className='chakra-text css-0'>Books Comments</p>
-							</div>
-						</button>
-					</Link>
-					<div className='nav_link' >
-						<button
-							type='button'
-							className={
-								pathname == '/requirement'
-									? 'active_link nav_link-button'
-									: 'nav_link-button'
-							}
-							
-
-							onClick={()=>{
-								router.push("/login")
-								localStorage.removeItem("token")
-								toggleOffcanvas()
-							}}
-						>
-							<div className='flex items-center gap-x-2 justify-start'>
-								<CgLogOut />
-						 <p className='chakra-text css-0'>LogOut</p>
-							</div>
-						</button>
-					</div>
-				</div>
+						</div>
 					</div>
 				</nav>
 			)}
@@ -519,7 +523,9 @@ console.log(isContainerSt ,"isContainerSt header");
 								<IoColorPaletteSharp size={22} />
 								<h3 className='font-bold text-[22px] '> Settins bar </h3>
 							</div>
-							<p className=' dark:text-slate-200 text-balck '>Set your own customized style</p>
+							<p className=' dark:text-slate-200 text-balck '>
+								Set your own customized style
+							</p>
 						</div>
 
 						<button
@@ -589,7 +595,9 @@ console.log(isContainerSt ,"isContainerSt header");
 										dispatch(containerState());
 										toggleSettingsOffCanvas();
 									}}
-									className={`switch_btn  ${isContainerSt ? "":"switch_btn_active"}   `}
+									className={`switch_btn  ${
+										isContainerSt ? '' : 'switch_btn_active'
+									}   `}
 								></button>
 							</div>
 
@@ -609,40 +617,42 @@ console.log(isContainerSt ,"isContainerSt header");
 								<div className='flex'></div>
 								<div className='grid   gap-1 grid-cols-2  '>
 									<div>
-										<label htmlFor='cb1' className='img_label'>
-											<Image
-												alt='img'
-												onClick={toggleActiveBar}
-												src={BarImg1}
-											/>
-										</label>
-										<div className='flex items-center gap-2'>
-											<span
-												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
-													true ? '1px' : '5px'
-												}] `}
-											></span>
-											<p className=' text-[18px] dark:text-white text-slate-700  '>
-												{' '}
-												Inverted
-											</p>
-										</div>
-									</div>
-									<div>
 										<label htmlFor='cb2' className='img_label'>
 											<Image
 												alt='img'
-												onClick={toggleActiveBar}
-												src={BarImg2}
+												onClick={() => {
+													if (isnavSt) {
+														dispatch(navState());
+													toggleSettingsOffCanvas();
+													}
+												}}
+												src={BarImg4}
+												className={`${
+													!isnavSt ? 'img_label_border_active' : ''
+												}`}
 											/>
 										</label>
 										<div className='flex items-center gap-2 '>
 											<span
 												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
-													true ? '1px' : '5px'
+													!isnavSt ? '2px' : '1px'
 												}] `}
+												onClick={() => {
+													if (isnavSt) {
+														dispatch(navState());
+													toggleSettingsOffCanvas();
+													}
+												}}
 											></span>
-											<p className=' text-[18px] dark:text-white text-slate-700  '>
+											<p
+												className={` text-[18px]  ${!isnavSt ? ' font-bold text-mainColor' : 'dark:text-white text-slate-700'} `}
+												onClick={() => {
+													if (isnavSt) {
+														dispatch(navState());
+													toggleSettingsOffCanvas();
+													}
+												}}
+											>
 												{' '}
 												Inverted
 											</p>
@@ -652,37 +662,39 @@ console.log(isContainerSt ,"isContainerSt header");
 										<label htmlFor='cb3' className='img_label'>
 											<Image
 												alt='img'
-												onClick={toggleActiveBar}
+												className={`${
+													isnavSt ? 'img_label_border_active' : ''
+												}   `}
 												src={BarImg3}
+												onClick={() => {
+													if (!isnavSt) {
+														dispatch(navState());
+												toggleSettingsOffCanvas();	
+													}
+												}}
 											/>
 										</label>
 										<div className='flex  items-center gap-2 '>
 											<span
 												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
-													true ? '1px' : '5px'
+													isnavSt ? '2px' : '1px'
 												}] `}
+												onClick={() => {
+													if (!isnavSt) {
+														dispatch(navState());
+												toggleSettingsOffCanvas();	
+													}
+												}}
 											></span>
-											<p className=' text-[18px] dark:text-white text-slate-700  '>
-												{' '}
-												Inverted
-											</p>
-										</div>
-									</div>
-									<div>
-										<label htmlFor='cb4' className='img_label'>
-											<Image
-												alt='img'
-												onClick={toggleActiveBar}
-												src={BarImg4}
-											/>
-										</label>
-										<div className='flex  items-center gap-2 '>
-											<span
-												className={` w-[15px] h-[15px] rounded-full border-cyan-200 border-[${
-													true ? '1px' : '5px'
-												}] `}
-											></span>
-											<p className=' text-[18px] dark:text-white text-slate-700  '>
+											<p
+												className={` text-[18px]  ${isnavSt ? ' font-bold text-mainColor' : 'dark:text-white text-slate-700'} `}
+												onClick={() => {
+													if (!isnavSt) {
+														dispatch(navState());
+												toggleSettingsOffCanvas();	
+													}
+												}}
+											>
 												{' '}
 												Inverted
 											</p>
