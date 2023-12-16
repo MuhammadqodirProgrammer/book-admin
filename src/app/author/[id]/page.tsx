@@ -196,7 +196,8 @@ export default function Page() {
 									{item?.book_title}
 								</h6>
 								<h6 className='pt-[10px] text-[16px] font-bold text-black dark:text-white'>
-									{item?.book_description}
+									
+									{item?.book_description?.length > 45 ? item?.book_description?.slice(0, 43 ) +".." :item?.book_description}
 								</h6>
 								<div className='flex justify-between items-center  py-[15px]'>
 									<span className='flex gap-[5px] items-center text-[15px] text-black dark:text-famousCourcesDescsColor'>
@@ -216,20 +217,19 @@ export default function Page() {
 									</div>
 								</div>
 								<div className='flex justify-between items-center'>
-							
-									<audio
-										controls
-										src={`${baseMediaUrl}audios/${item?.book_audio}`}
-										className=" mb-3 "
-									>
-										Your browser does not support the
-										<code>audio</code> element.
-									</audio>
+							{
+								item?.book_audion && <audio
+								controls
+								src={`${baseMediaUrl}audios/${item?.book_audio}`}
+								className=" mb-3 "
+							>
+								Your browser does not support the
+								<code>audio</code> element.
+							</audio>
+							}
 									
 								</div>
-								<div className='flex '>
-									<FaFileDownload size={20} />
-								</div>
+								
 								<hr className='h-1 w-full bg-CoursesHr' />
 								<div className='flex justify-between items-center pt-5'>
 									<div className='flex gap-[10px] items-center text-black dark:text-white'>
