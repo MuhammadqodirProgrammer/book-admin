@@ -115,6 +115,7 @@ const router = useRouter();
 								id='email'
 								placeholder='Username or Email'
 								ref={emailRef}
+								defaultValue="komilovm831@gmail.com"
 							/>
 						</div>
 						<div className='mb-6 md:w-full'>
@@ -138,6 +139,8 @@ const router = useRouter();
         outline-none
         focus:ring-blue-500 focus:border-blue-500 focus:ring-1'
 									ref={pasRef}
+								defaultValue="admin"
+
 								/>
 								<button
 									type='button'
